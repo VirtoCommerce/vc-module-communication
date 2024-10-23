@@ -6,4 +6,6 @@ public class SearchMessageCriteria : SearchCriteriaBase
     public string EntityId { get; set; }
 
     public string EntityType { get; set; }
+
+    public string ThreadId { get; set; }
 }

@@ -39,6 +39,11 @@ public class MessageSearchService : SearchService<SearchMessageCriteria,
             query = query.Where(x => x.EntityType == criteria.EntityType);
         }
 
+        if (!string.IsNullOrEmpty(criteria.ThreadId))
+        {
+            query = query.Where(x => x.ThreadId == criteria.ThreadId);
+        }
+
         return query;
     }
 }
