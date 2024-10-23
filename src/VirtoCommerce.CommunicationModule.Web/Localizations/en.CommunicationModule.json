@@ -1,0 +1,28 @@
+{
+  "CommunicationModule": {
+    "blades": {
+      "hello-world": {
+        "title": "Hello world blade"
+      }
+    }
+  },
+  "permissions": {
+    "CommunicationModule:access": "Open CommunicationModule menu",
+    "CommunicationModule:create": "Create CommunicationModule related data",
+    "CommunicationModule:read": "View CommunicationModule related data",
+    "CommunicationModule:update": "Update CommunicationModule related data",
+    "CommunicationModule:delete": "Delete CommunicationModule related data"
+  },
+  "settings": {
+    "CommunicationModule": {
+      "CommunicationModuleEnabled": {
+        "title": "CommunicationModule Enabled",
+        "description": "CommunicationModule Enabled setting"
+      },
+      "CommunicationModulePassword": {
+        "title": "CommunicationModule Password",
+        "description": "CommunicationModule Password setting"
+      }
+    }
+  }
+}
