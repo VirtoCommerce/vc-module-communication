@@ -87,6 +87,7 @@ public class Module : IModule, IHasConfiguration
         using var serviceScope = serviceProvider.CreateScope();
         using var dbContext = serviceScope.ServiceProvider.GetRequiredService<CommunicationDbContext>();
         dbContext.Database.Migrate();
+
     }
 
     public void Uninstall()
