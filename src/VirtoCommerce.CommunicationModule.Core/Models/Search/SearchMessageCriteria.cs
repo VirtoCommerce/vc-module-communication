@@ -8,4 +8,6 @@ public class SearchMessageCriteria : SearchCriteriaBase
     public string EntityType { get; set; }
 
     public string ThreadId { get; set; }
+
+    public bool RootsOnly { get; set; }
 }

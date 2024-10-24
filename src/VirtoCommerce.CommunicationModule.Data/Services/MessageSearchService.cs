@@ -43,6 +43,10 @@ public class MessageSearchService : SearchService<SearchMessageCriteria,
         {
             query = query.Where(x => x.ThreadId == criteria.ThreadId);
         }
+        else if (criteria.RootsOnly)
+        {
+            query = query.Where(x => string.IsNullOrEmpty(x.ThreadId));
+        }
 
         return query;
     }
