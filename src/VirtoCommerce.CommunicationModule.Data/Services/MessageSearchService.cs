@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.CommunicationModule.Core.Models;
@@ -50,4 +51,22 @@ public class MessageSearchService : SearchService<SearchMessageCriteria,
 
         return query;
     }
+
+    protected override IList<SortInfo> BuildSortExpression(SearchMessageCriteria criteria)
+    {
+        var sortInfos = criteria.SortInfos;
+        if (sortInfos.IsNullOrEmpty())
+        {
+            sortInfos = [
+                    new SortInfo
+                    {
+                        SortColumn = ReflectionUtility.GetPropertyName<MessageEntity>(x => x.CreatedDate),
+                        SortDirection = SortDirection.Ascending
+                    }
+                ];
+        }
+
+        return sortInfos;
+    }
+
 }

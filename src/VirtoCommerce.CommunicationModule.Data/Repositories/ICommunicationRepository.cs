@@ -11,7 +11,8 @@ public interface ICommunicationRepository : IRepository
     IQueryable<CommunicationUserEntity> CommunicationUsers { get; }
 
     Task<IList<MessageEntity>> GetMessagesByIdsAsync(IList<string> ids, string responseGroup = null);
-    Task<IList<MessageEntity>> GetMessagesByEntityAsync(string entityId, string entityType);
+    Task<IList<MessageEntity>> GetMessagesByEntityAsync(string entityId, string entityType, string responseGroup = null);
+    Task<IList<MessageEntity>> GetMessagesByThreadAsync(string threadId, string responseGroup = null);
 
     Task<IList<CommunicationUserEntity>> GetCommunicationUserByIdsAsync(IList<string> ids, string responseGroup = null);
     Task<CommunicationUserEntity> GetCommunicationUserByUserIdAsync(string userId, string userType);

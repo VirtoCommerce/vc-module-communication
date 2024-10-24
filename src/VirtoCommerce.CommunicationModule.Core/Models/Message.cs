@@ -14,6 +14,9 @@ public class Message : AuditableEntity, ICloneable
     public IList<MessageAttachment> Attachments { get; set; }
     public IList<MessageRecipient> Recipients { get; set; }
     public IList<MessageReaction> Reactions { get; set; }
+    public IList<Message> Answers { get; set; }
+
+    public int? AnswersCount => Answers?.Count;
 
     #region ICloneable members
     public virtual object Clone()

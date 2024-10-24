@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using VirtoCommerce.CommunicationModule.Core.Models;
 using VirtoCommerce.CommunicationModule.Data.Models;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
@@ -21,22 +22,87 @@ public class CommunicationRepository : DbContextRepositoryBase<CommunicationDbCo
     public virtual async Task<IList<MessageEntity>> GetMessagesByIdsAsync(IList<string> ids, string responseGroup = null)
     {
         var result = Array.Empty<MessageEntity>();
+        var respGroupEnum = EnumUtility.SafeParseFlags(responseGroup, MessageResponseGroup.WithoutAnswers);
 
         if (!ids.IsNullOrEmpty())
         {
-            result = await Messages.Where(x => ids.Contains(x.Id)).Include(x => x.Attachments).Include(x => x.Recipients).Include(x => x.Reactions).ToArrayAsync();
+            var query = Messages.Where(x => ids.Contains(x.Id));
+
+            if (respGroupEnum.HasFlag(MessageResponseGroup.WithAttachments))
+            {
+                query = query.Include(x => x.Attachments);
+            }
+
+            if (respGroupEnum.HasFlag(MessageResponseGroup.WithRecipients))
+            {
+                query = query.Include(x => x.Recipients);
+            }
+
+            if (respGroupEnum.HasFlag(MessageResponseGroup.WithReactions))
+            {
+                query = query.Include(x => x.Reactions);
+            }
+
+            result = await query.ToArrayAsync();
         }
 
         return result;
     }
 
-    public virtual async Task<IList<MessageEntity>> GetMessagesByEntityAsync(string entityId, string entityType)
+    public virtual async Task<IList<MessageEntity>> GetMessagesByEntityAsync(string entityId, string entityType, string responseGroup = null)
     {
         var result = Array.Empty<MessageEntity>();
+        var respGroupEnum = EnumUtility.SafeParseFlags(responseGroup, MessageResponseGroup.WithoutAnswers);
 
         if (!string.IsNullOrEmpty(entityId))
         {
-            result = await Messages.Where(x => x.EntityId == entityId && x.EntityType == entityType).Include(x => x.Attachments).Include(x => x.Recipients).Include(x => x.Reactions).ToArrayAsync();
+            var query = Messages.Where(x => x.EntityId == entityId && x.EntityType == entityType);
+
+            if (respGroupEnum.HasFlag(MessageResponseGroup.WithAttachments))
+            {
+                query = query.Include(x => x.Attachments);
+            }
+
+            if (respGroupEnum.HasFlag(MessageResponseGroup.WithRecipients))
+            {
+                query = query.Include(x => x.Recipients);
+            }
+
+            if (respGroupEnum.HasFlag(MessageResponseGroup.WithReactions))
+            {
+                query = query.Include(x => x.Reactions);
+            }
+
+            result = await query.ToArrayAsync();
+        }
+
+        return result;
+    }
+
+    public virtual async Task<IList<MessageEntity>> GetMessagesByThreadAsync(string threadId, string responseGroup = null)
+    {
+        var result = Array.Empty<MessageEntity>();
+        var respGroupEnum = EnumUtility.SafeParseFlags(responseGroup, MessageResponseGroup.WithoutAnswers);
+        if (!string.IsNullOrEmpty(threadId))
+        {
+            var query = Messages.Where(x => x.ThreadId == threadId);
+
+            if (respGroupEnum.HasFlag(MessageResponseGroup.WithAttachments))
+            {
+                query = query.Include(x => x.Attachments);
+            }
+
+            if (respGroupEnum.HasFlag(MessageResponseGroup.WithRecipients))
+            {
+                query = query.Include(x => x.Recipients);
+            }
+
+            if (respGroupEnum.HasFlag(MessageResponseGroup.WithReactions))
+            {
+                query = query.Include(x => x.Reactions);
+            }
+
+            result = await query.ToArrayAsync();
         }
 
         return result;

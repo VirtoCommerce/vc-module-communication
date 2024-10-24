@@ -8,5 +8,7 @@ public enum MessageResponseGroup
     WithAttachments = 1,
     WithRecipients = 2,
     WithReactions = 4,
-    Full = None | WithAttachments | WithRecipients | WithReactions
+    WithAnswers = 8,
+    WithoutAnswers = None | WithAttachments | WithRecipients | WithReactions,
+    Full = None | WithAttachments | WithRecipients | WithReactions | WithAnswers
 }
