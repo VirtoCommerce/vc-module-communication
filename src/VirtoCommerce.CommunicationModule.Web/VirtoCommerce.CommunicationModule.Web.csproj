@@ -14,4 +14,7 @@
     <ProjectReference Include="..\VirtoCommerce.CommunicationModule.Data.PostgreSql\VirtoCommerce.CommunicationModule.Data.PostgreSql.csproj" />
     <ProjectReference Include="..\VirtoCommerce.CommunicationModule.Data.SqlServer\VirtoCommerce.CommunicationModule.Data.SqlServer.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controllers\Api\" />
+  </ItemGroup>
 </Project>

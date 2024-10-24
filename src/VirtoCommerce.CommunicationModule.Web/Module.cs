@@ -14,7 +14,6 @@ using VirtoCommerce.CommunicationModule.Data.Repositories;
 using VirtoCommerce.CommunicationModule.Data.Services;
 using VirtoCommerce.CommunicationModule.Data.SqlServer;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.CommunicationModule.Web;
@@ -73,8 +72,8 @@ public class Module : IModule, IHasConfiguration
         settingsRegistrar.RegisterSettings(ModuleConstants.Settings.AllSettings, ModuleInfo.Id);
 
         // Register permissions
-        var permissionsRegistrar = serviceProvider.GetRequiredService<IPermissionsRegistrar>();
-        permissionsRegistrar.RegisterPermissions(ModuleInfo.Id, "CommunicationModule", ModuleConstants.Security.Permissions.AllPermissions);
+        //var permissionsRegistrar = serviceProvider.GetRequiredService<IPermissionsRegistrar>();
+        //permissionsRegistrar.RegisterPermissions(ModuleInfo.Id, "CommunicationModule", ModuleConstants.Security.Permissions.AllPermissions);
 
         // Message senders
         var messageSendersRegistrar = appBuilder.ApplicationServices.GetService<IMessageSenderRegistrar>();
