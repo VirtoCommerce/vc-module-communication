@@ -11,6 +11,7 @@ public interface IMessageService
 
     Task SendMessage(Message message);
     Task UpdateMessage(Message message);
+    Task DeleteMessage(IList<string> messageIds, bool withReplies);
 
     Task<Message> SetMessageReadStatus(string messageId, string recipientId, bool notRead);
     Task<Message> SetMessageReaction(string messageId, string userId, string reaction);

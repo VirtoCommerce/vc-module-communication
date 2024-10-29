@@ -49,9 +49,23 @@ public class MessageService : IMessageService
         return result;
     }
 
-    public virtual Task<IList<Message>> GetMessagesByThread(string threadId)
+    public virtual async Task<IList<Message>> GetMessagesByThread(string threadId)
     {
-        throw new NotImplementedException();
+        var result = new List<Message>();
+        using var repository = _repositoryFactory();
+
+        var messageEntities = await repository.GetMessagesByThreadAsync(threadId, MessageResponseGroup.None.ToString());
+
+        if (messageEntities != null && messageEntities.Any())
+        {
+            foreach (var messageEntity in messageEntities)
+            {
+                var message = messageEntity.ToModel(AbstractTypeFactory<Message>.TryCreateInstance());
+                result.Add(message);
+            }
+        }
+
+        return result;
     }
 
     //public virtual async Task<IList<Message>> GetMessagesBySender(string senderId)
@@ -79,6 +93,30 @@ public class MessageService : IMessageService
     {
         // TODO: more logic with sender?
         await _messageCrudService.SaveChangesAsync([message]);
+    }
+
+    public virtual async Task DeleteMessage(IList<string> messageIds, bool withReplies)
+    {
+        if (withReplies)
+        {
+            var idsToDelete = await GetChildMessageIdsRecursively(messageIds);
+            await _messageCrudService.DeleteAsync(idsToDelete);
+        }
+        else
+        {
+            foreach (var messageId in messageIds)
+            {
+                var childMessages = await GetMessagesByThread(messageId);
+                foreach (var childMessage in childMessages)
+                {
+                    childMessage.ThreadId = null;
+                }
+
+                await _messageCrudService.SaveChangesAsync(childMessages);
+            }
+
+            await _messageCrudService.DeleteAsync(messageIds);
+        }
     }
 
     public virtual async Task<Message> SetMessageReadStatus(string messageId, string recipientId, bool notRead = false)
@@ -133,5 +171,24 @@ public class MessageService : IMessageService
         await _messageCrudService.SaveChangesAsync([message]);
 
         return message;
+    }
+
+    protected virtual async Task<List<string>> GetChildMessageIdsRecursively(IList<string> parendMessageIds)
+    {
+        foreach (var parendMessageId in parendMessageIds)
+        {
+            var childMessages = (await GetMessagesByThread(parendMessageId)).Select(x => x.Id).ToList();
+            if (childMessages.Any())
+            {
+                childMessages.AddRange(await GetChildMessageIdsRecursively(childMessages));
+                return childMessages;
+            }
+            else
+            {
+                return new List<string>([parendMessageId]);
+            }
+        }
+
+        return new List<string>();
     }
 }
