@@ -8,11 +8,14 @@ using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.CommunicationModule.Core;
 using VirtoCommerce.CommunicationModule.Core.MessageSenders;
 using VirtoCommerce.CommunicationModule.Core.Services;
+using VirtoCommerce.CommunicationModule.Data.Handlers;
 using VirtoCommerce.CommunicationModule.Data.MySql;
 using VirtoCommerce.CommunicationModule.Data.PostgreSql;
 using VirtoCommerce.CommunicationModule.Data.Repositories;
 using VirtoCommerce.CommunicationModule.Data.Services;
 using VirtoCommerce.CommunicationModule.Data.SqlServer;
+using VirtoCommerce.CustomerModule.Core.Events;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
 
@@ -58,6 +61,8 @@ public class Module : IModule, IHasConfiguration
         serviceCollection.AddTransient<ICommunicationUserService, CommunicationUserService>();
         serviceCollection.AddTransient<ICommunicationUserCrudService, CommunicationUserCrudService>();
 
+        serviceCollection.AddTransient<MemberChangedEventHandler>();
+
         serviceCollection.AddTransient<PushNotificationSender>();
 
         serviceCollection.AddMediatR(typeof(Data.Anchor));
@@ -70,6 +75,8 @@ public class Module : IModule, IHasConfiguration
         // Register settings
         var settingsRegistrar = serviceProvider.GetRequiredService<ISettingsRegistrar>();
         settingsRegistrar.RegisterSettings(ModuleConstants.Settings.AllSettings, ModuleInfo.Id);
+
+        appBuilder.RegisterEventHandler<MemberChangedEvent, MemberChangedEventHandler>();
 
         // Register permissions
         //var permissionsRegistrar = serviceProvider.GetRequiredService<IPermissionsRegistrar>();
