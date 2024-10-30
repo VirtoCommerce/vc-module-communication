@@ -7,5 +7,6 @@ public interface ICommunicationUserService
 {
     Task<CommunicationUser> CreateCommunicationUser(string userId, string userType);
     Task<CommunicationUser> GetCommunicationUserByUserId(string userId, string userType);
+    Task<CommunicationUser> GetOrCreateCommunicationUser(string userId, string userType);
     Task<IList<CommunicationUser>> SearchUsersByName(string userName, string userType);
 }

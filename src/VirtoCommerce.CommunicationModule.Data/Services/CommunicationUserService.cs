@@ -81,6 +81,17 @@ public class CommunicationUserService : ICommunicationUserService
         return null;
     }
 
+    public virtual async Task<CommunicationUser> GetOrCreateCommunicationUser(string userId, string userType)
+    {
+        var communicationUser = await GetCommunicationUserByUserId(userId, userType);
+        if (communicationUser == null)
+        {
+            communicationUser = await CreateCommunicationUser(userId, userType);
+        }
+
+        return communicationUser;
+    }
+
     public virtual Task<IList<CommunicationUser>> SearchUsersByName(string userName, string userType)
     {
         throw new NotImplementedException();
