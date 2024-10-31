@@ -127,7 +127,7 @@ public class MessageService : IMessageService
             throw new InvalidOperationException($"Message with id {messageId} not found");
         }
 
-        var recipient = message.Recipients.FirstOrDefault(x => x.Id == recipientId);
+        var recipient = message.Recipients.FirstOrDefault(x => x.RecipientId == recipientId);
         if (recipient == null)
         {
             throw new InvalidOperationException($"Recipient with id {recipientId} not received message {messageId}");
