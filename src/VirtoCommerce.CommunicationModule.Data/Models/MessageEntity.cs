@@ -98,17 +98,17 @@ public class MessageEntity : AuditableEntity, IDataEntity<MessageEntity, Message
         model.Content = Content;
         model.ThreadId = ThreadId;
 
-        if (!Attachments.IsNullCollection())
+        if (Attachments != null && Attachments.Any())
         {
             model.Attachments = Attachments.Select(x => x.ToModel(AbstractTypeFactory<MessageAttachment>.TryCreateInstance())).ToList();
         }
 
-        if (!Recipients.IsNullCollection())
+        if (Recipients != null && Recipients.Any())
         {
             model.Recipients = Recipients.Select(x => x.ToModel(AbstractTypeFactory<MessageRecipient>.TryCreateInstance())).ToList();
         }
 
-        if (!Reactions.IsNullCollection())
+        if (Reactions != null && Reactions.Any())
         {
             model.Reactions = Reactions.Select(x => x.ToModel(AbstractTypeFactory<MessageReaction>.TryCreateInstance())).ToList();
         }
@@ -124,17 +124,17 @@ public class MessageEntity : AuditableEntity, IDataEntity<MessageEntity, Message
         target.Content = Content;
         target.ThreadId = ThreadId;
 
-        if (!Attachments.IsNullCollection())
+        if (Attachments != null && Attachments.Any())
         {
             Attachments.Patch(target.Attachments, (source, target) => source.Patch(target));
         }
 
-        if (!Recipients.IsNullCollection())
+        if (Recipients != null && Recipients.Any())
         {
             Recipients.Patch(target.Recipients, (source, target) => source.Patch(target));
         }
 
-        if (!Reactions.IsNullCollection())
+        if (Reactions != null && Reactions.Any())
         {
             Reactions.Patch(target.Reactions, (source, target) => source.Patch(target));
         }
