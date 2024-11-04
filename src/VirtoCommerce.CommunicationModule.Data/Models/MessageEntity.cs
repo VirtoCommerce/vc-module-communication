@@ -98,17 +98,17 @@ public class MessageEntity : AuditableEntity, IDataEntity<MessageEntity, Message
         model.Content = Content;
         model.ThreadId = ThreadId;
 
-        if (Attachments.IsNullCollection())
+        if (!Attachments.IsNullCollection())
         {
             model.Attachments = Attachments.Select(x => x.ToModel(AbstractTypeFactory<MessageAttachment>.TryCreateInstance())).ToList();
         }
 
-        if (Recipients.IsNullCollection())
+        if (!Recipients.IsNullCollection())
         {
             model.Recipients = Recipients.Select(x => x.ToModel(AbstractTypeFactory<MessageRecipient>.TryCreateInstance())).ToList();
         }
 
-        if (Reactions.IsNullCollection())
+        if (!Reactions.IsNullCollection())
         {
             model.Reactions = Reactions.Select(x => x.ToModel(AbstractTypeFactory<MessageReaction>.TryCreateInstance())).ToList();
         }

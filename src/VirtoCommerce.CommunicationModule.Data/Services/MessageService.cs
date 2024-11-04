@@ -68,6 +68,30 @@ public class MessageService : IMessageService
         return result;
     }
 
+    public virtual async Task<IList<Message>> GetThread(string threadId)
+    {
+        var result = new List<Message>();
+        using var repository = _repositoryFactory();
+
+        var threadIdToSearch = threadId;
+
+        while (!string.IsNullOrEmpty(threadIdToSearch))
+        {
+
+            var messageEntity = (await repository.GetMessagesByIdsAsync([threadId], MessageResponseGroup.WithoutAnswers.ToString())).FirstOrDefault();
+
+            if (messageEntity != null)
+            {
+                threadIdToSearch = messageEntity.ThreadId;
+
+                var message = messageEntity.ToModel(AbstractTypeFactory<Message>.TryCreateInstance());
+                result.Add(message);
+            }
+        }
+
+        return result;
+    }
+
     //public virtual async Task<IList<Message>> GetMessagesBySender(string senderId)
     //{
     //    return await GetMessagesByCondition(x => x.SenderId == senderId);
@@ -171,6 +195,27 @@ public class MessageService : IMessageService
         await _messageCrudService.SaveChangesAsync([message]);
 
         return message;
+    }
+
+    public virtual async Task<int> GetUnreadMessagesCount(string recipientId, string entityId, string entityType)
+    {
+        int result = 0;
+
+        using var repository = _repositoryFactory();
+
+        if (!string.IsNullOrEmpty(recipientId) && !string.IsNullOrEmpty(entityId) && !string.IsNullOrEmpty(entityType))
+        {
+
+            var messageEntities = await repository.GetMessagesByEntityAsync(entityId, entityType);
+
+            if (messageEntities != null && messageEntities.Any())
+            {
+                var unreadMessagesCount = messageEntities.Where(x => x.Recipients.Any(r => r.ReadStatus != ReadStatus.Read && r.RecipientId == recipientId)).Count();
+                result = unreadMessagesCount;
+            }
+        }
+
+        return result;
     }
 
     protected virtual async Task<List<string>> GetChildMessageIdsRecursively(IList<string> parendMessageIds)

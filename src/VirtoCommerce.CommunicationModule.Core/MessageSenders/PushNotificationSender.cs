@@ -56,8 +56,11 @@ public class PushNotificationSender : IMessageSender
                 {
                     Title = "New message",
                     MessageId = message.Id,
+                    ThreadId = message.ThreadId,
                     Content = message.Content,
                     SenderId = message.SenderId,
+                    EntityId = message.EntityId,
+                    EntityType = message.EntityType,
                 };
 
                 await _pushNotificationManager.SendAsync(pushNotification);

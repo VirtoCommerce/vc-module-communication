@@ -4,6 +4,7 @@ using VirtoCommerce.CommunicationModule.Core.MessageSenders;
 using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.CommunicationModule.Core;
+
 [ExcludeFromCodeCoverage]
 public static class ModuleConstants
 {

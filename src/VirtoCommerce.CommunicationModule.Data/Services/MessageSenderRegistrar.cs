@@ -9,17 +9,17 @@ public class MessageSenderRegistrar : IMessageSenderRegistrar, IMessageSenderFac
 {
     private readonly IServiceProvider _serviceProvider;
 
+    public MessageSenderRegistrar(IServiceProvider serviceProvider)
+    {
+        _serviceProvider = serviceProvider;
+    }
+
     public IEnumerable<IMessageSender> AllRegisteredSenders
     {
         get
         {
             return AbstractTypeFactory<IMessageSender>.AllTypeInfos.Select(x => AbstractTypeFactory<IMessageSender>.TryCreateInstance(x.TypeName));
         }
-    }
-
-    public MessageSenderRegistrar(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
     }
 
     public MessageSenderBuilder Register<TMessageSender>(Func<IMessageSender> factory = null) where TMessageSender : IMessageSender

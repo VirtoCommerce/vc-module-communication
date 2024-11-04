@@ -7,6 +7,7 @@ public interface IMessageService
 {
     Task<IList<Message>> GetMessagesByEntity(string entityId, string entityType);
     Task<IList<Message>> GetMessagesByThread(string threadId);
+    Task<IList<Message>> GetThread(string threadId);
     //Task<IList<Message>> GetMessagesBySender(string senderId);
 
     Task SendMessage(Message message);
@@ -15,4 +16,5 @@ public interface IMessageService
 
     Task<Message> SetMessageReadStatus(string messageId, string recipientId, bool notRead);
     Task<Message> SetMessageReaction(string messageId, string userId, string reaction);
+    Task<int> GetUnreadMessagesCount(string recipientId, string entityId, string entityType);
 }

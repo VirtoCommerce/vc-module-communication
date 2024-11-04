@@ -96,23 +96,4 @@ public class CommunicationUserService : ICommunicationUserService
     {
         throw new NotImplementedException();
     }
-
-    //protected virtual async Task<IList<CommunicationUser>> GetUsersByCondition(Func<CommunicationUserEntity, bool> condition)
-    //{
-    //    var result = new List<CommunicationUser>();
-    //    using var repository = _repositoryFactory();
-
-    //    var userEntities = await repository.CommunicationUsers.Where(x => condition(x)).ToArrayAsync();
-
-    //    if (userEntities != null && userEntities.Any())
-    //    {
-    //        foreach (var userEntity in userEntities)
-    //        {
-    //            var user = userEntity.ToModel(AbstractTypeFactory<CommunicationUser>.TryCreateInstance());
-    //            result.AddDistinct(user);
-    //        }
-    //    }
-
-    //    return result;
-    //}
 }
