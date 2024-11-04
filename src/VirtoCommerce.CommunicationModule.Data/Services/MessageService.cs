@@ -78,12 +78,11 @@ public class MessageService : IMessageService
         while (!string.IsNullOrEmpty(threadIdToSearch))
         {
 
-            var messageEntity = (await repository.GetMessagesByIdsAsync([threadId], MessageResponseGroup.WithoutAnswers.ToString())).FirstOrDefault();
+            var messageEntity = (await repository.GetMessagesByIdsAsync([threadIdToSearch], MessageResponseGroup.WithoutAnswers.ToString())).FirstOrDefault();
+            threadIdToSearch = messageEntity?.ThreadId;
 
             if (messageEntity != null)
             {
-                threadIdToSearch = messageEntity.ThreadId;
-
                 var message = messageEntity.ToModel(AbstractTypeFactory<Message>.TryCreateInstance());
                 result.Add(message);
             }
