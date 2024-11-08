@@ -118,6 +118,11 @@ public class MessageEntity : AuditableEntity, IDataEntity<MessageEntity, Message
 
     public virtual void Patch(MessageEntity target)
     {
+        if (target == null)
+        {
+            throw new ArgumentNullException(nameof(target));
+        }
+
         target.SenderId = SenderId;
         target.EntityId = EntityId;
         target.EntityType = EntityType;

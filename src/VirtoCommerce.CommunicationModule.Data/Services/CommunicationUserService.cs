@@ -10,7 +10,6 @@ using VirtoCommerce.CustomerModule.Core.Model;
 using VirtoCommerce.CustomerModule.Core.Model.Search;
 using VirtoCommerce.CustomerModule.Core.Services;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.Security.Search;
 
 namespace VirtoCommerce.CommunicationModule.Data.Services;
 public class CommunicationUserService : ICommunicationUserService
@@ -18,19 +17,16 @@ public class CommunicationUserService : ICommunicationUserService
     private readonly Func<ICommunicationRepository> _repositoryFactory;
     private readonly ICommunicationUserCrudService _communicationUserCrudService;
     private readonly IMemberSearchService _memberSearchService;
-    private readonly IUserSearchService _userSearchService;
 
     public CommunicationUserService(
         Func<ICommunicationRepository> repositoryFactory,
         ICommunicationUserCrudService communicationUserCrudService,
-        IMemberSearchService memberSearchService,
-        IUserSearchService userSearchService
+        IMemberSearchService memberSearchService
         )
     {
         _repositoryFactory = repositoryFactory;
         _communicationUserCrudService = communicationUserCrudService;
         _memberSearchService = memberSearchService;
-        _userSearchService = userSearchService;
     }
 
     public virtual async Task<CommunicationUser> CreateCommunicationUser(string userId, string userType)

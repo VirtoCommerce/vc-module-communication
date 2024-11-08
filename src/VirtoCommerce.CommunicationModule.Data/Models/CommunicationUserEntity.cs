@@ -68,6 +68,11 @@ public class CommunicationUserEntity : AuditableEntity, IDataEntity<Communicatio
 
     public virtual void Patch(CommunicationUserEntity target)
     {
+        if (target == null)
+        {
+            throw new ArgumentNullException(nameof(target));
+        }
+
         target.UserName = UserName;
         target.UserId = UserId;
         target.UserType = UserType;

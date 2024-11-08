@@ -12,19 +12,16 @@ using VirtoCommerce.Platform.Core.Settings;
 namespace VirtoCommerce.CommunicationModule.Core.MessageSenders;
 public class PushNotificationSender : IMessageSender
 {
-    private readonly IMessageCrudService _messageCrudService;
     private readonly ICommunicationUserCrudService _communicationUserCrudService;
     private readonly IUserSearchService _userSearchService;
     private readonly IPushNotificationManager _pushNotificationManager;
 
     public PushNotificationSender(
-        IMessageCrudService messageCrudService,
         ICommunicationUserCrudService communicationUserCrudService,
         IUserSearchService userSearchService,
         IPushNotificationManager pushNotificationManager
         )
     {
-        _messageCrudService = messageCrudService;
         _communicationUserCrudService = communicationUserCrudService;
         _userSearchService = userSearchService;
         _pushNotificationManager = pushNotificationManager;

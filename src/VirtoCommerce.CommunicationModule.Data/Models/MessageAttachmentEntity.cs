@@ -69,6 +69,11 @@ public class MessageAttachmentEntity : AuditableEntity, IDataEntity<MessageAttac
 
     public virtual void Patch(MessageAttachmentEntity target)
     {
+        if (target == null)
+        {
+            throw new ArgumentNullException(nameof(target));
+        }
+
         target.MessageId = MessageId;
         target.AttachmentUrl = AttachmentUrl;
         target.FileType = FileType;

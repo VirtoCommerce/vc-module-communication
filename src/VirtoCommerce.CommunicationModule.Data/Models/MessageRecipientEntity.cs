@@ -72,6 +72,11 @@ public class MessageRecipientEntity : AuditableEntity, IDataEntity<MessageRecipi
 
     public virtual void Patch(MessageRecipientEntity target)
     {
+        if (target == null)
+        {
+            throw new ArgumentNullException(nameof(target));
+        }
+
         target.MessageId = MessageId;
         target.RecipientId = RecipientId;
         target.ReadStatus = ReadStatus;

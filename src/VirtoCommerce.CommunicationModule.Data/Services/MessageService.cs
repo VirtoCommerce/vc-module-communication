@@ -71,19 +71,15 @@ public class MessageService : IMessageService
     public virtual async Task<IList<Message>> GetThread(string threadId)
     {
         var result = new List<Message>();
-        using var repository = _repositoryFactory();
-
         var threadIdToSearch = threadId;
 
         while (!string.IsNullOrEmpty(threadIdToSearch))
         {
+            var message = await _messageCrudService.GetByIdAsync(threadIdToSearch, MessageResponseGroup.WithoutAnswers.ToString());
+            threadIdToSearch = message?.ThreadId;
 
-            var messageEntity = (await repository.GetMessagesByIdsAsync([threadIdToSearch], MessageResponseGroup.WithoutAnswers.ToString())).FirstOrDefault();
-            threadIdToSearch = messageEntity?.ThreadId;
-
-            if (messageEntity != null)
+            if (message != null)
             {
-                var message = messageEntity.ToModel(AbstractTypeFactory<Message>.TryCreateInstance());
                 result.Add(message);
             }
         }
@@ -150,7 +146,7 @@ public class MessageService : IMessageService
             throw new InvalidOperationException($"Message with id {messageId} not found");
         }
 
-        var recipient = message.Recipients.FirstOrDefault(x => x.RecipientId == recipientId);
+        var recipient = message.Recipients?.FirstOrDefault(x => x.RecipientId == recipientId);
         if (recipient == null)
         {
             throw new InvalidOperationException($"Recipient with id {recipientId} not received message {messageId}");
@@ -179,11 +175,17 @@ public class MessageService : IMessageService
             throw new InvalidOperationException($"Message with id {messageId} not found");
         }
 
-        var messageReaction = message.Reactions.FirstOrDefault(x => x.UserId == userId);
+        var messageReaction = message.Reactions?.FirstOrDefault(x => x.UserId == userId);
         if (messageReaction == null)
         {
             messageReaction = AbstractTypeFactory<MessageReaction>.TryCreateInstance();
+            messageReaction.MessageId = messageId;
+            messageReaction.UserId = userId;
             messageReaction.Reaction = reaction;
+            if (message.Reactions == null)
+            {
+                message.Reactions = new List<MessageReaction>();
+            }
             message.Reactions.Add(messageReaction);
         }
         else
@@ -200,16 +202,14 @@ public class MessageService : IMessageService
     {
         int result = 0;
 
-        using var repository = _repositoryFactory();
-
         if (!string.IsNullOrEmpty(recipientId) && !string.IsNullOrEmpty(entityId) && !string.IsNullOrEmpty(entityType))
         {
 
-            var messageEntities = await repository.GetMessagesByEntityAsync(entityId, entityType);
+            var messages = await GetMessagesByEntity(entityId, entityType);
 
-            if (messageEntities != null && messageEntities.Any())
+            if (messages != null && messages.Any())
             {
-                var unreadMessagesCount = messageEntities.Where(x => x.Recipients.Any(r => r.ReadStatus != ReadStatus.Read && r.RecipientId == recipientId)).Count();
+                var unreadMessagesCount = messages.Where(x => x.Recipients.Any(r => r.ReadStatus != ReadStatus.Read && r.RecipientId == recipientId)).Count();
                 result = unreadMessagesCount;
             }
         }

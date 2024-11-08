@@ -67,6 +67,11 @@ public class MessageReactionEntity : AuditableEntity, IDataEntity<MessageReactio
 
     public virtual void Patch(MessageReactionEntity target)
     {
+        if (target == null)
+        {
+            throw new ArgumentNullException(nameof(target));
+        }
+
         target.MessageId = MessageId;
         target.UserId = UserId;
         target.Reaction = Reaction;
