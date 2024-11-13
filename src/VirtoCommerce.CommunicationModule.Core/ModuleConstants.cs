@@ -36,12 +36,6 @@ public static class ModuleConstants
         public const string Customer = "Customer";
     }
 
-    public static class EntityType
-    {
-        public const string Product = "Product";
-        public const string Order = "Order";
-    }
-
     public static class ReadStatus
     {
         public const string New = "New";

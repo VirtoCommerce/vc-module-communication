@@ -18,7 +18,7 @@ public class MessageEntity : AuditableEntity, IDataEntity<MessageEntity, Message
     public string EntityId { get; set; }
 
     [Required]
-    [StringLength(64)]
+    [StringLength(128)]
     public string EntityType { get; set; }
 
     [Required]
