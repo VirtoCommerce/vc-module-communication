@@ -67,6 +67,92 @@ namespace VirtoCommerce.CommunicationModule.Data.SqlServer.Migrations
                     b.ToTable("CommunicationUser", (string)null);
                 });
 
+            modelBuilder.Entity("VirtoCommerce.CommunicationModule.Data.Models.ConversationEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EntityId")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("EntityType")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("IconUrl")
+                        .HasMaxLength(2083)
+                        .HasColumnType("nvarchar(2083)");
+
+                    b.Property<string>("LastMessageId")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime>("LastMessageTimestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Conversation", (string)null);
+                });
+
+            modelBuilder.Entity("VirtoCommerce.CommunicationModule.Data.Models.ConversationUserEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("ConversationId")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConversationId");
+
+                    b.ToTable("ConversationUser", (string)null);
+                });
+
             modelBuilder.Entity("VirtoCommerce.CommunicationModule.Data.Models.MessageAttachmentEntity", b =>
                 {
                     b.Property<string>("Id")
@@ -122,22 +208,17 @@ namespace VirtoCommerce.CommunicationModule.Data.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ConversationId")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("EntityId")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<string>("EntityType")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ModifiedBy")
                         .HasMaxLength(64)
@@ -156,6 +237,8 @@ namespace VirtoCommerce.CommunicationModule.Data.SqlServer.Migrations
                         .HasColumnType("nvarchar(128)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ConversationId");
 
                     b.HasIndex("SenderId");
 
@@ -254,6 +337,17 @@ namespace VirtoCommerce.CommunicationModule.Data.SqlServer.Migrations
                     b.ToTable("MessageRecipient", (string)null);
                 });
 
+            modelBuilder.Entity("VirtoCommerce.CommunicationModule.Data.Models.ConversationUserEntity", b =>
+                {
+                    b.HasOne("VirtoCommerce.CommunicationModule.Data.Models.ConversationEntity", "Conversation")
+                        .WithMany("Users")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Conversation");
+                });
+
             modelBuilder.Entity("VirtoCommerce.CommunicationModule.Data.Models.MessageAttachmentEntity", b =>
                 {
                     b.HasOne("VirtoCommerce.CommunicationModule.Data.Models.MessageEntity", "Message")
@@ -267,11 +361,19 @@ namespace VirtoCommerce.CommunicationModule.Data.SqlServer.Migrations
 
             modelBuilder.Entity("VirtoCommerce.CommunicationModule.Data.Models.MessageEntity", b =>
                 {
+                    b.HasOne("VirtoCommerce.CommunicationModule.Data.Models.ConversationEntity", "Conversation")
+                        .WithMany()
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("VirtoCommerce.CommunicationModule.Data.Models.CommunicationUserEntity", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Conversation");
 
                     b.Navigation("Sender");
                 });
@@ -312,6 +414,11 @@ namespace VirtoCommerce.CommunicationModule.Data.SqlServer.Migrations
                     b.Navigation("Message");
 
                     b.Navigation("Recipient");
+                });
+
+            modelBuilder.Entity("VirtoCommerce.CommunicationModule.Data.Models.ConversationEntity", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("VirtoCommerce.CommunicationModule.Data.Models.MessageEntity", b =>

@@ -33,8 +33,7 @@ public class PushNotificationSenderTest
         {
             Id = "TestMessageId",
             SenderId = "TestSenderId",
-            EntityId = "TestEntityId",
-            EntityType = "TestEntityType",
+            ConversationId = "TestConversationId",
             Content = "My test message content",
             ThreadId = "TestThreadId",
             Recipients = new List<MessageRecipient>

@@ -18,6 +18,7 @@ public class CommunicationRepository : DbContextRepositoryBase<CommunicationDbCo
 
     public IQueryable<MessageEntity> Messages => DbContext.Set<MessageEntity>();
     public IQueryable<CommunicationUserEntity> CommunicationUsers => DbContext.Set<CommunicationUserEntity>();
+    public IQueryable<ConversationEntity> Conversations => DbContext.Set<ConversationEntity>();
 
     public virtual async Task<IList<MessageEntity>> GetMessagesByIdsAsync(IList<string> ids, string responseGroup = null)
     {
@@ -49,14 +50,14 @@ public class CommunicationRepository : DbContextRepositoryBase<CommunicationDbCo
         return result;
     }
 
-    public virtual async Task<IList<MessageEntity>> GetMessagesByEntityAsync(string entityId, string entityType, string responseGroup = null)
+    public virtual async Task<IList<MessageEntity>> GetMessagesByConversationAsync(string conversationId, string responseGroup = null)
     {
         var result = Array.Empty<MessageEntity>();
         var respGroupEnum = EnumUtility.SafeParseFlags(responseGroup, MessageResponseGroup.WithoutAnswers);
 
-        if (!string.IsNullOrEmpty(entityId))
+        if (!string.IsNullOrEmpty(conversationId))
         {
-            var query = Messages.Where(x => x.EntityId == entityId && x.EntityType == entityType);
+            var query = Messages.Where(x => x.ConversationId == conversationId);
 
             if (respGroupEnum.HasFlag(MessageResponseGroup.WithAttachments))
             {
@@ -72,6 +73,8 @@ public class CommunicationRepository : DbContextRepositoryBase<CommunicationDbCo
             {
                 query = query.Include(x => x.Reactions);
             }
+
+            //query = query.Include(x => x.Conversation);
 
             result = await query.ToArrayAsync();
         }
@@ -128,5 +131,41 @@ public class CommunicationRepository : DbContextRepositoryBase<CommunicationDbCo
         }
 
         return null;
+    }
+
+    public virtual async Task<IList<ConversationEntity>> GetConversationsByIdsAsync(IList<string> ids, string responseGroup = null)
+    {
+        var result = Array.Empty<ConversationEntity>();
+
+        if (!ids.IsNullOrEmpty())
+        {
+            result = await Conversations.Where(x => ids.Contains(x.Id)).ToArrayAsync();
+        }
+
+        return result;
+    }
+
+    public virtual async Task<ConversationEntity> GetConversationByEntityAsync(string entityId, string entityType)
+    {
+        ConversationEntity result = null;
+
+        if (!string.IsNullOrEmpty(entityId) && !string.IsNullOrEmpty(entityType))
+        {
+            result = await Conversations.FirstOrDefaultAsync(x => x.EntityId == entityId && x.EntityType == entityType);
+        }
+
+        return result;
+    }
+
+    public virtual async Task<ConversationEntity> GetConversationByUsersAsync(IList<string> userIds)
+    {
+        ConversationEntity result = null;
+
+        if (userIds != null && userIds.Any())
+        {
+            result = await Conversations.Include(x => x.Users).FirstOrDefaultAsync(x => x.EntityId == null && x.Users.Select(u => u.Id).Intersect(userIds).Count() == userIds.Count);
+        }
+
+        return result;
     }
 }

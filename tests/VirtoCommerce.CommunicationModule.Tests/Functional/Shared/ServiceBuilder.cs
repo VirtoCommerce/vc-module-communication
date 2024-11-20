@@ -28,6 +28,7 @@ public class ServiceBuilder
         services.AddTransient<IMessageCrudService, MessageCrudServiceMock>();
         services.AddTransient<IMessageSenderRegistrar, MessageSenderRegistrarMock>();
         services.AddTransient<IMessageSender, TestMessageSender>();
+        services.AddTransient<IConversationCrudService, ConversationCrudServiceMock>();
 
         services.AddTransient<IUserSearchService, UserSearchServiceStub>();
         services.AddTransient<IMemberSearchService, MemberSearchServiceStub>();

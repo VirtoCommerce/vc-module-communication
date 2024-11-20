@@ -14,21 +14,19 @@ public class MessageEntity : AuditableEntity, IDataEntity<MessageEntity, Message
     public string SenderId { get; set; }
 
     [Required]
-    [StringLength(128)]
-    public string EntityId { get; set; }
-
-    [Required]
-    [StringLength(128)]
-    public string EntityType { get; set; }
-
-    [Required]
     public string Content { get; set; }
 
     [StringLength(128)]
     public string ThreadId { get; set; }
 
+    [Required]
+    [StringLength(128)]
+    public string ConversationId { get; set; }
+
     #region Navigation Properties
     public virtual CommunicationUserEntity Sender { get; set; }
+
+    public virtual ConversationEntity Conversation { get; set; }
 
     public virtual ObservableCollection<MessageAttachmentEntity> Attachments { get; set; }
         = new NullCollection<MessageAttachmentEntity>();
@@ -56,10 +54,14 @@ public class MessageEntity : AuditableEntity, IDataEntity<MessageEntity, Message
         ModifiedDate = model.ModifiedDate;
 
         SenderId = model.SenderId;
-        EntityId = model.EntityId;
-        EntityType = model.EntityType;
+        ConversationId = model.ConversationId;
         Content = model.Content;
         ThreadId = model.ThreadId;
+
+        if (model.Conversation != null)
+        {
+            Conversation = AbstractTypeFactory<ConversationEntity>.TryCreateInstance().FromModel(model.Conversation, pkMap);
+        }
 
         if (model.Attachments != null)
         {
@@ -93,10 +95,14 @@ public class MessageEntity : AuditableEntity, IDataEntity<MessageEntity, Message
         model.ModifiedDate = ModifiedDate;
 
         model.SenderId = SenderId;
-        model.EntityId = EntityId;
-        model.EntityType = EntityType;
+        model.ConversationId = ConversationId;
         model.Content = Content;
         model.ThreadId = ThreadId;
+
+        if (Conversation != null)
+        {
+            model.Conversation = Conversation.ToModel(AbstractTypeFactory<Conversation>.TryCreateInstance());
+        }
 
         if (Attachments != null && Attachments.Any())
         {
@@ -124,8 +130,7 @@ public class MessageEntity : AuditableEntity, IDataEntity<MessageEntity, Message
         }
 
         target.SenderId = SenderId;
-        target.EntityId = EntityId;
-        target.EntityType = EntityType;
+        target.ConversationId = ConversationId;
         target.Content = Content;
         target.ThreadId = ThreadId;
 

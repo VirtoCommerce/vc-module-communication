@@ -5,10 +5,9 @@ using VirtoCommerce.CommunicationModule.Core.Models;
 namespace VirtoCommerce.CommunicationModule.Core.Services;
 public interface IMessageService
 {
-    Task<IList<Message>> GetMessagesByEntity(string entityId, string entityType);
+    Task<IList<Message>> GetMessagesByConversation(string conversationId);
     Task<IList<Message>> GetMessagesByThread(string threadId);
     Task<IList<Message>> GetThread(string threadId);
-    //Task<IList<Message>> GetMessagesBySender(string senderId);
 
     Task SendMessage(Message message);
     Task UpdateMessage(Message message);
@@ -16,5 +15,5 @@ public interface IMessageService
 
     Task<Message> SetMessageReadStatus(string messageId, string recipientId, bool notRead);
     Task<Message> SetMessageReaction(string messageId, string userId, string reaction);
-    Task<int> GetUnreadMessagesCount(string recipientId, string entityId, string entityType);
+    Task<int> GetUnreadMessagesCount(string recipientId, string conversationId);
 }

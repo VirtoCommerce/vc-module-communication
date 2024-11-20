@@ -61,6 +61,10 @@ public class Module : IModule, IHasConfiguration
         serviceCollection.AddTransient<ICommunicationUserService, CommunicationUserService>();
         serviceCollection.AddTransient<ICommunicationUserCrudService, CommunicationUserCrudService>();
 
+        serviceCollection.AddTransient<IConversationService, ConversationService>();
+        serviceCollection.AddTransient<IConversationCrudService, ConversationCrudService>();
+        serviceCollection.AddTransient<IConversationSearchService, ConversationSearchService>();
+
         serviceCollection.AddTransient<MemberChangedEventHandler>();
 
         serviceCollection.AddTransient<PushNotificationSender>();

@@ -22,7 +22,7 @@ public class MessageSearchServiceTests
 {
     [Theory]
     [MemberData(nameof(MessageSearchTestInput))]
-    public async Task MessageSearchTest(string entityId, string entityType, string threadId, bool rootsOnly, int expectedMessagesCount)
+    public async Task MessageSearchTest(string conversationId, string threadId, bool rootsOnly, int expectedMessagesCount)
     {
         // Arrange
         CommunicationRepositoryMock communicationRepositoryMock = new();
@@ -34,8 +34,7 @@ public class MessageSearchServiceTests
         var messageSearchService = GetMessageSearchService(communicationRepositoryMock);
 
         var criteria = new SearchMessageCriteria();
-        criteria.EntityId = entityId;
-        criteria.EntityType = entityType;
+        criteria.ConversationId = conversationId;
         criteria.ThreadId = threadId;
         criteria.RootsOnly = rootsOnly;
         criteria.Sort = "createdDate:asc";
@@ -80,56 +79,49 @@ public class MessageSearchServiceTests
             new MessageEntity
             {
                 Id = "TestMessageId_1",
-                EntityId = "TestEntityId_1",
-                EntityType = "TestEntityType",
+                ConversationId = "TestConversationId_1",
                 ThreadId = null,
                 Content = "Test message content 01"
             },
             new MessageEntity
             {
                 Id = "TestMessageId_2",
-                EntityId = "TestEntityId_2",
-                EntityType = "TestEntityType",
+                ConversationId = "TestConversationId_2",
                 ThreadId = null,
                 Content = "Test message content 02"
             },
             new MessageEntity
             {
                 Id = "TestMessageId_3",
-                EntityId = "TestEntityId_1",
-                EntityType = "TestEntityType",
+                ConversationId = "TestConversationId_1",
                 ThreadId = "TestMessageId_1",
                 Content = "Test message content 03"
             }
         ];
 
-    public static TheoryData<string, string, string, bool, int> MessageSearchTestInput()
+    public static TheoryData<string, string, bool, int> MessageSearchTestInput()
     {
-        return new TheoryData<string, string, string, bool, int>
+        return new TheoryData<string, string, bool, int>
         {
             {
-                "TestEntityId_2",
-                null,
+                "TestConversationId_2",
                 null,
                 false,
                 1
             },
             {
                 null,
-                "TestEntityType",
                 null,
                 false,
                 3
             },
             {
                 null,
-                null,
                 "TestMessageId_1",
                 false,
                 1
             },
             {
-                null,
                 null,
                 null,
                 true,

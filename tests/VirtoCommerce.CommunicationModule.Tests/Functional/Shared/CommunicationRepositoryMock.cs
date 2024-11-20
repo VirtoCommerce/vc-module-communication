@@ -25,6 +25,9 @@ class CommunicationRepositoryMock : ICommunicationRepository
     public IQueryable<CommunicationUserEntity> CommunicationUsers => throw new System.NotImplementedException();
     public List<CommunicationUserEntity> CommunicationUserEntities = new();
 
+    public IQueryable<ConversationEntity> Conversations => throw new System.NotImplementedException();
+    public List<ConversationEntity> ConversationEntities = new();
+
     public IUnitOfWork UnitOfWork => new Mock<IUnitOfWork>().Object;
 
     public void Add<T>(T item) where T : class
@@ -47,6 +50,15 @@ class CommunicationRepositoryMock : ICommunicationRepository
             }
             CommunicationUserEntities.Add(communicationUserEntity);
         }
+        else if (item.GetType() == typeof(ConversationEntity))
+        {
+            var conversationEntity = item as ConversationEntity;
+            if (string.IsNullOrEmpty(conversationEntity.Id))
+            {
+                conversationEntity.Id = nameof(ConversationEntity) + conversationEntity.Name;
+            }
+            ConversationEntities.Add(conversationEntity);
+        }
     }
 
     public void Attach<T>(T item) where T : class
@@ -65,6 +77,11 @@ class CommunicationRepositoryMock : ICommunicationRepository
         {
             var communicationUserEntity = item as CommunicationUserEntity;
             CommunicationUserEntities.Remove(communicationUserEntity);
+        }
+        else if (item.GetType() == typeof(ConversationEntity))
+        {
+            var conversationEntity = item as ConversationEntity;
+            ConversationEntities.Remove(conversationEntity);
         }
     }
 
@@ -97,12 +114,12 @@ class CommunicationRepositoryMock : ICommunicationRepository
         return Task.FromResult(result);
     }
 
-    public Task<IList<MessageEntity>> GetMessagesByEntityAsync(string entityId, string entityType, string responseGroup = null)
+    public Task<IList<MessageEntity>> GetMessagesByConversationAsync(string conversationId, string responseGroup = null)
     {
         var result = new List<MessageEntity>();
-        if (!string.IsNullOrEmpty(entityId) && !string.IsNullOrEmpty(entityType))
+        if (!string.IsNullOrEmpty(conversationId))
         {
-            result = MessageEntities.Where(x => x.EntityId == entityId && x.EntityType == entityType).ToList();
+            result = MessageEntities.Where(x => x.ConversationId == conversationId).ToList();
         }
         return Task.FromResult(result as IList<MessageEntity>);
     }
@@ -125,5 +142,34 @@ class CommunicationRepositoryMock : ICommunicationRepository
             result = MessageEntities.Where(x => x.ThreadId == threadId).ToList();
         }
         return Task.FromResult(result as IList<MessageEntity>);
+    }
+
+    public Task<IList<ConversationEntity>> GetConversationsByIdsAsync(IList<string> ids, string responseGroup = null)
+    {
+        var result = new List<ConversationEntity>();
+
+        if (!ids.IsNullOrEmpty())
+        {
+            result = ConversationEntities.Where(x => ids.Contains(x.Id)).ToList();
+        }
+
+        return Task.FromResult(result as IList<ConversationEntity>);
+    }
+
+    public Task<ConversationEntity> GetConversationByEntityAsync(string entityId, string entityType)
+    {
+        ConversationEntity result = null;
+
+        if (!string.IsNullOrEmpty(entityId) && !string.IsNullOrEmpty(entityType))
+        {
+            result = ConversationEntities.FirstOrDefault(x => x.EntityId == entityId && x.EntityType == entityId);
+        }
+
+        return Task.FromResult(result);
+    }
+
+    public Task<ConversationEntity> GetConversationByUsersAsync(IList<string> userIds)
+    {
+        throw new System.NotImplementedException();
     }
 }

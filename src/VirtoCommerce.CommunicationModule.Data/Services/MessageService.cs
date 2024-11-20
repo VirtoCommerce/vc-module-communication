@@ -16,26 +16,29 @@ public class MessageService : IMessageService
     private readonly ISettingsManager _settingsManager;
     private readonly IMessageSenderRegistrar _messageSenderRegistrar;
     private readonly IMessageCrudService _messageCrudService;
+    private readonly IConversationCrudService _conversationCrudService;
 
     public MessageService(
         Func<ICommunicationRepository> repositoryFactory,
         ISettingsManager settingsManager,
         IMessageSenderRegistrar messageSenderRegistrar,
-        IMessageCrudService messageCrudService
+        IMessageCrudService messageCrudService,
+        IConversationCrudService conversationCrudService
         )
     {
         _repositoryFactory = repositoryFactory;
         _settingsManager = settingsManager;
         _messageSenderRegistrar = messageSenderRegistrar;
         _messageCrudService = messageCrudService;
+        _conversationCrudService = conversationCrudService;
     }
 
-    public virtual async Task<IList<Message>> GetMessagesByEntity(string entityId, string entityType)
+    public virtual async Task<IList<Message>> GetMessagesByConversation(string conversationId)
     {
         var result = new List<Message>();
         using var repository = _repositoryFactory();
 
-        var messageEntities = await repository.GetMessagesByEntityAsync(entityId, entityType);
+        var messageEntities = await repository.GetMessagesByConversationAsync(conversationId);
 
         if (messageEntities != null && messageEntities.Any())
         {
@@ -87,14 +90,22 @@ public class MessageService : IMessageService
         return result;
     }
 
-    //public virtual async Task<IList<Message>> GetMessagesBySender(string senderId)
-    //{
-    //    return await GetMessagesByCondition(x => x.SenderId == senderId);
-    //}
-
     public virtual async Task SendMessage(Message message)
     {
+        if (string.IsNullOrEmpty(message.Id))
+        {
+            message.Id = Guid.NewGuid().ToString();
+        }
+
         await _messageCrudService.SaveChangesAsync([message]);
+
+        var conversation = await _conversationCrudService.GetByIdAsync(message.ConversationId);
+        if (conversation != null)
+        {
+            conversation.LastMessageId = message.Id;
+            conversation.LastMessageTimestamp = DateTime.UtcNow;
+            await _conversationCrudService.SaveChangesAsync([conversation]);
+        }
 
         var messageSenders = await _settingsManager.GetValueAsync<string>(Settings.General.MessageSenders);
 
@@ -198,14 +209,14 @@ public class MessageService : IMessageService
         return message;
     }
 
-    public virtual async Task<int> GetUnreadMessagesCount(string recipientId, string entityId, string entityType)
+    public virtual async Task<int> GetUnreadMessagesCount(string recipientId, string conversationId)
     {
         int result = 0;
 
-        if (!string.IsNullOrEmpty(recipientId) && !string.IsNullOrEmpty(entityId) && !string.IsNullOrEmpty(entityType))
+        if (!string.IsNullOrEmpty(recipientId) && !string.IsNullOrEmpty(conversationId))
         {
 
-            var messages = await GetMessagesByEntity(entityId, entityType);
+            var messages = await GetMessagesByConversation(conversationId);
 
             if (messages != null && messages.Any())
             {

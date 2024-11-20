@@ -28,6 +28,8 @@ public class CommunicationDbContext : DbContextBase
         modelBuilder.Entity<MessageEntity>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
         modelBuilder.Entity<MessageEntity>().HasOne(x => x.Sender).WithMany()
             .HasForeignKey(x => x.SenderId).OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<MessageEntity>().HasOne(x => x.Conversation).WithMany()
+            .HasForeignKey(x => x.ConversationId).OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<MessageAttachmentEntity>().ToTable("MessageAttachment").HasKey(x => x.Id);
         modelBuilder.Entity<MessageAttachmentEntity>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
@@ -47,6 +49,14 @@ public class CommunicationDbContext : DbContextBase
             .HasForeignKey(x => x.MessageId).OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<MessageReactionEntity>().HasOne(x => x.User).WithMany()
             .HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ConversationEntity>().ToTable("Conversation").HasKey(x => x.Id);
+        modelBuilder.Entity<ConversationEntity>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
+
+        modelBuilder.Entity<ConversationUserEntity>().ToTable("ConversationUser").HasKey(x => x.Id);
+        modelBuilder.Entity<ConversationUserEntity>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
+        modelBuilder.Entity<ConversationUserEntity>().HasOne(x => x.Conversation).WithMany(x => x.Users)
+            .HasForeignKey(x => x.ConversationId).OnDelete(DeleteBehavior.Cascade);
 
         switch (Database.ProviderName)
         {

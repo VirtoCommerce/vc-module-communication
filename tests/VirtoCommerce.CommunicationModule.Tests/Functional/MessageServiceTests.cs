@@ -23,16 +23,19 @@ public class MessageServiceTests
     private static readonly string _testMessageId = "TestMessageId";
     private static readonly string _testRecipientId = "TestRecipientId";
     private static readonly string _testUnreadRecipientId = "TestUnreadRecipientId";
-    private static readonly string _testEntityId = "TestEntityId";
-    private static readonly string _testEntityType = "TestEntityType";
+    private static readonly string _testConversationId = "TestConversationId";
     private static readonly Message _message = new()
     {
         Id = _testMessageId,
         SenderId = "TestSenderId",
-        EntityId = _testEntityId,
-        EntityType = _testEntityType,
+        ConversationId = _testConversationId,
         Content = "My test message content",
         ThreadId = "TestThreadId",
+        Conversation = new Conversation
+        {
+            Id = _testConversationId,
+            EntityId = "TestEntityId",
+        },
         Recipients = new List<MessageRecipient>
         {
             new MessageRecipient
@@ -171,7 +174,7 @@ public class MessageServiceTests
 
     [Theory]
     [MemberData(nameof(UnreadCountTestInput))]
-    public async Task UnreadCountTest(string recipientId, string entityId, string entityType, int expectedCount)
+    public async Task UnreadCountTest(string recipientId, string conversationId, int expectedCount)
     {
         // Arrange
         CommunicationRepositoryMock communicationRepositoryMock = new();
@@ -181,7 +184,7 @@ public class MessageServiceTests
         var messageService = GetMessageService(communicationRepositoryMock);
 
         // Act
-        int actualCount = await messageService.GetUnreadMessagesCount(recipientId, entityId, entityType);
+        int actualCount = await messageService.GetUnreadMessagesCount(recipientId, conversationId);
 
         // Assertion
         actualCount.Should().Be(expectedCount);
@@ -213,7 +216,8 @@ public class MessageServiceTests
                 () => communicationRepositoryMock,
                 serviceProvider.GetService<ISettingsManager>(),
                 messageSenderRegistrar,
-                messageCrudServiceMock
+                messageCrudServiceMock,
+                serviceProvider.GetService<IConversationCrudService>()
             );
 
         return messageService;
@@ -260,24 +264,21 @@ public class MessageServiceTests
         };
     }
 
-    public static TheoryData<string, string, string, int> UnreadCountTestInput()
+    public static TheoryData<string, string, int> UnreadCountTestInput()
     {
-        return new TheoryData<string, string, string, int>
+        return new TheoryData<string, string, int>
         {
             {
                 _testUnreadRecipientId,
-                _testEntityId,
-                _testEntityType,
+                _testConversationId,
                 1
             },
             {
                 "UnknownRecipientId",
                 "UnknownEntityId",
-                "UnknownEntityType",
                 0
             },
             {
-                null,
                 null,
                 null,
                 0

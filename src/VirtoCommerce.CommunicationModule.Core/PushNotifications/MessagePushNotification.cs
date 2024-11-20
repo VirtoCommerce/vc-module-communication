@@ -14,4 +14,5 @@ public class MessagePushNotification : PushNotification
     public string SenderId { get; set; }
     public string EntityId { get; set; }
     public string EntityType { get; set; }
+    public string ConversationId { get; set; }
 }

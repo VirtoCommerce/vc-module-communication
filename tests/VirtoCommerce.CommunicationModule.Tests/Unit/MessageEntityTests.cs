@@ -53,8 +53,7 @@ public class MessageEntityTests
         // Assertion
         Assert.Equal(originalMessageEntity.Id, convertedMessageEntity.Id);
         Assert.Equal(originalMessageEntity.SenderId, convertedMessageEntity.SenderId);
-        Assert.Equal(originalMessageEntity.EntityId, convertedMessageEntity.EntityId);
-        Assert.Equal(originalMessageEntity.EntityType, convertedMessageEntity.EntityType);
+        Assert.Equal(originalMessageEntity.ConversationId, convertedMessageEntity.ConversationId);
         Assert.Equal(originalMessageEntity.Content, convertedMessageEntity.Content);
         Assert.Equal(originalMessageEntity.ThreadId, convertedMessageEntity.ThreadId);
         Assert.Equal(originalMessageEntity.CreatedDate, convertedMessageEntity.CreatedDate);
@@ -91,8 +90,7 @@ public class MessageEntityTests
 
         // Assertion
         Assert.Equal(actualMessageEntity.SenderId, patchedMessageEntity.SenderId);
-        Assert.Equal(actualMessageEntity.EntityId, patchedMessageEntity.EntityId);
-        Assert.Equal(actualMessageEntity.EntityType, patchedMessageEntity.EntityType);
+        Assert.Equal(actualMessageEntity.ConversationId, patchedMessageEntity.ConversationId);
         Assert.Equal(actualMessageEntity.Content, patchedMessageEntity.Content);
         Assert.Equal(actualMessageEntity.ThreadId, patchedMessageEntity.ThreadId);
         Assert.Equal(actualMessageEntity.Attachments, patchedMessageEntity.Attachments);
@@ -108,14 +106,17 @@ public class MessageEntityTests
             {
                 Id = "TestMessageId",
                 SenderId = "TestSenderId",
-                EntityId = "TestEntityId",
-                EntityType = "TestEntityType",
+                ConversationId = "TestConversationId",
                 Content = "My test message content",
                 ThreadId = "TestThreadId",
                 CreatedDate = new DateTime(2024, 11, 01),
                 ModifiedDate = new DateTime(2024, 11, 01),
                 CreatedBy = "Test Created By",
                 ModifiedBy = "Test Modified By",
+                Conversation = new ConversationEntity{
+                    Id = "TestConversationId",
+                    EntityId = "TestEntityId",
+                },
                 Attachments = new ObservableCollection<MessageAttachmentEntity>(
                     new List<MessageAttachmentEntity> {
                         new MessageAttachmentEntity
