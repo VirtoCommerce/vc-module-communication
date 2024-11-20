@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.CommunicationModule.Core.Models;
 using VirtoCommerce.CommunicationModule.Core.Services;
@@ -16,14 +17,17 @@ public class ConversationCrudService : CrudService<Conversation, ConversationEnt
     IConversationCrudService
 {
     private readonly Func<ICommunicationRepository> _repositoryFactory;
+    private readonly IMessageCrudService _messageCrudService;
 
     public ConversationCrudService(
         Func<ICommunicationRepository> repositoryFactory,
         IPlatformMemoryCache platformMemoryCache,
-        IEventPublisher eventPublisher
+        IEventPublisher eventPublisher,
+        IMessageCrudService messageCrudService
         ) : base(repositoryFactory, platformMemoryCache, eventPublisher)
     {
         _repositoryFactory = repositoryFactory;
+        _messageCrudService = messageCrudService;
     }
 
     protected override Task<IList<ConversationEntity>> LoadEntities(IRepository repository, IList<string> ids, string responseGroup)
@@ -31,4 +35,26 @@ public class ConversationCrudService : CrudService<Conversation, ConversationEnt
         return ((ICommunicationRepository)repository).GetConversationsByIdsAsync(ids, responseGroup);
     }
 
+    public override async Task<IList<Conversation>> GetAsync(IList<string> ids, string responseGroup = null, bool clone = true)
+    {
+        var conversations = (await base.GetAsync(ids.ToList(), responseGroup)).ToArray();
+
+        var respGroupEnum = EnumUtility.SafeParseFlags(responseGroup, ConversationResponseGroup.None);
+
+        if (respGroupEnum.HasFlag(ConversationResponseGroup.WithLastMessage))
+        {
+            if (!conversations.IsNullOrEmpty())
+            {
+                var lastMessageIds = conversations.Select(x => x.LastMessageId).ToList();
+                var lastMessages = await _messageCrudService.GetAsync(lastMessageIds);
+
+                foreach (var conversation in conversations)
+                {
+                    conversation.LastMessage = lastMessages.FirstOrDefault(x => x.Id == conversation.LastMessageId);
+                }
+            }
+        }
+
+        return conversations;
+    }
 }

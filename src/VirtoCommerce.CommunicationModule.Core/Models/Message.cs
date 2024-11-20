@@ -20,6 +20,7 @@ public class Message : AuditableEntity, ICloneable
     public virtual int? AnswersCount => Answers?.Count;
     public virtual string EntityId => Conversation?.EntityId;
     public virtual string EntityType => Conversation?.EntityType;
+    public virtual CommunicationUser Sender { get; set; }
 
     #region ICloneable members
     public virtual object Clone()

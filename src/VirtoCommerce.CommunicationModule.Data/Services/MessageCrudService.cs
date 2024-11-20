@@ -17,14 +17,17 @@ public class MessageCrudService : CrudService<Message, MessageEntity,
     IMessageCrudService
 {
     private readonly Func<ICommunicationRepository> _repositoryFactory;
+    private readonly ICommunicationUserCrudService _communicationUserCrudService;
 
     public MessageCrudService(
-    Func<ICommunicationRepository> repositoryFactory,
-    IPlatformMemoryCache platformMemoryCache,
-    IEventPublisher eventPublisher
-    ) : base(repositoryFactory, platformMemoryCache, eventPublisher)
+        Func<ICommunicationRepository> repositoryFactory,
+        IPlatformMemoryCache platformMemoryCache,
+        IEventPublisher eventPublisher,
+        ICommunicationUserCrudService communicationUserCrudService
+        ) : base(repositoryFactory, platformMemoryCache, eventPublisher)
     {
         _repositoryFactory = repositoryFactory;
+        _communicationUserCrudService = communicationUserCrudService;
     }
 
     protected override Task<IList<MessageEntity>> LoadEntities(IRepository repository, IList<string> ids, string responseGroup)
@@ -38,13 +41,29 @@ public class MessageCrudService : CrudService<Message, MessageEntity,
 
         var respGroupEnum = EnumUtility.SafeParseFlags(responseGroup, MessageResponseGroup.WithoutAnswers);
 
+        if (respGroupEnum.HasFlag(MessageResponseGroup.WithSender))
+        {
+            if (!messages.IsNullOrEmpty())
+            {
+                var sendersIds = messages.Select(x => x.SenderId).ToList();
+                var senders = await _communicationUserCrudService.GetAsync(sendersIds);
+                foreach (var message in messages)
+                {
+                    message.Sender = senders.FirstOrDefault(x => x.Id == message.SenderId);
+                }
+            }
+        }
+
         if (respGroupEnum.HasFlag(MessageResponseGroup.WithAnswers))
         {
-            using var repository = _repositoryFactory();
-            foreach (var message in messages)
+            if (!messages.IsNullOrEmpty())
             {
-                var answers = await repository.GetMessagesByThreadAsync(message.Id, MessageResponseGroup.None.ToString());
-                message.Answers = answers.Select(x => x.ToModel(AbstractTypeFactory<Message>.TryCreateInstance())).ToList();
+                using var repository = _repositoryFactory();
+                foreach (var message in messages)
+                {
+                    var answers = await repository.GetMessagesByThreadAsync(message.Id, MessageResponseGroup.None.ToString());
+                    message.Answers = answers.Select(x => x.ToModel(AbstractTypeFactory<Message>.TryCreateInstance())).ToList();
+                }
             }
         }
 

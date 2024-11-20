@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.CommunicationModule.Core.Models;
 using VirtoCommerce.CommunicationModule.Core.Models.Search;
@@ -30,9 +31,10 @@ public class ConversationSearchService : SearchService<SearchConversationCriteri
     {
         var query = ((ICommunicationRepository)repository).Conversations;
 
-        if (!string.IsNullOrEmpty(criteria.UserId))
+        if (criteria.UserIds != null && criteria.UserIds.Any())
         {
-            query = query.Where(x => x.Users.Select(u => x.Id).Contains(criteria.UserId));
+            query = query.Include(x => x.Users);
+            query = query.Where(x => x.Users.Select(u => u.UserId).Intersect(criteria.UserIds).Count() > 0);
         }
 
         return query;
@@ -47,7 +49,7 @@ public class ConversationSearchService : SearchService<SearchConversationCriteri
                     new SortInfo
                     {
                         SortColumn = ReflectionUtility.GetPropertyName<ConversationEntity>(x => x.LastMessageTimestamp),
-                        SortDirection = SortDirection.Ascending
+                        SortDirection = SortDirection.Descending
                     }
                 ];
         }
