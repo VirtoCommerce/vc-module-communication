@@ -136,12 +136,12 @@ public class CommunicationRepository : DbContextRepositoryBase<CommunicationDbCo
     public virtual async Task<IList<ConversationEntity>> GetConversationsByIdsAsync(IList<string> ids, string responseGroup = null)
     {
         var result = Array.Empty<ConversationEntity>();
+        var respGroupEnum = EnumUtility.SafeParseFlags(responseGroup, ConversationResponseGroup.None);
 
         if (!ids.IsNullOrEmpty())
         {
-            result = await Conversations.Where(x => ids.Contains(x.Id)).ToArrayAsync();
+            result = await Conversations.Where(x => ids.Contains(x.Id)).Include(x => x.Users).ToArrayAsync();
         }
-
         return result;
     }
 

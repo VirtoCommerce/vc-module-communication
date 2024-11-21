@@ -30,10 +30,7 @@ public class MessageSearchService : SearchService<SearchMessageCriteria,
     {
         var query = ((ICommunicationRepository)repository).Messages;
 
-        if (!string.IsNullOrEmpty(criteria.ConversationId))
-        {
-            query = query.Where(x => x.ConversationId == criteria.ConversationId);
-        }
+        query = query.Where(x => x.ConversationId == criteria.ConversationId);
 
         if (!string.IsNullOrEmpty(criteria.ThreadId))
         {

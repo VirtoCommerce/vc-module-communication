@@ -110,22 +110,16 @@ public class MessageSearchServiceTests
                 1
             },
             {
-                null,
-                null,
-                false,
-                3
-            },
-            {
-                null,
+                "TestConversationId_1",
                 "TestMessageId_1",
                 false,
                 1
             },
             {
-                null,
+                "TestConversationId_1",
                 null,
                 true,
-                2
+                1
             }
         };
     }
