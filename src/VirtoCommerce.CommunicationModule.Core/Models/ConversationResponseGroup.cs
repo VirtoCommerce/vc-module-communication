@@ -5,5 +5,7 @@ namespace VirtoCommerce.CommunicationModule.Core.Models;
 public enum ConversationResponseGroup
 {
     None = 0,
-    WithLastMessage = 1
+    WithLastMessage = 1,
+    WithUnreadCount = 2,
+    Full = None | WithLastMessage | WithUnreadCount
 }
