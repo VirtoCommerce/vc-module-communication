@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.CommunicationModule.Core.Models;
@@ -18,13 +19,18 @@ public class ConversationSearchService : SearchService<SearchConversationCriteri
     SearchConversationResult, Conversation, ConversationEntity>,
     IConversationSearchService
 {
+    private readonly IMessageService _messageService;
+
     public ConversationSearchService(
         Func<ICommunicationRepository> repositoryFactory,
         IPlatformMemoryCache platformMemoryCache,
         IConversationCrudService crudService,
-        IOptions<CrudOptions> crudOptions)
+        IOptions<CrudOptions> crudOptions,
+        IMessageService messageService
+        )
         : base(repositoryFactory, platformMemoryCache, crudService, crudOptions)
     {
+        _messageService = messageService;
     }
 
     protected override IQueryable<ConversationEntity> BuildQuery(IRepository repository, SearchConversationCriteria criteria)
@@ -55,5 +61,22 @@ public class ConversationSearchService : SearchService<SearchConversationCriteri
         }
 
         return sortInfos;
+    }
+
+    protected override async Task<SearchConversationResult> ProcessSearchResultAsync(SearchConversationResult result, SearchConversationCriteria criteria)
+    {
+        var respGroupEnum = EnumUtility.SafeParseFlags(criteria.ResponseGroup, ConversationResponseGroup.None);
+        if (respGroupEnum.HasFlag(ConversationResponseGroup.WithUnreadCount))
+        {
+            if (!result.Results.IsNullOrEmpty())
+            {
+                foreach (var conversation in result.Results)
+                {
+                    conversation.UnreadMessagesCount = await _messageService.GetUnreadMessagesCount(criteria.UserIds.FirstOrDefault(), conversation.Id);
+                }
+            }
+        }
+
+        return result;
     }
 }

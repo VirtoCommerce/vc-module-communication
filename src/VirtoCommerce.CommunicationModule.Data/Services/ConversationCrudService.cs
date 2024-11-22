@@ -18,19 +18,16 @@ public class ConversationCrudService : CrudService<Conversation, ConversationEnt
 {
     private readonly Func<ICommunicationRepository> _repositoryFactory;
     private readonly IMessageCrudService _messageCrudService;
-    private readonly IMessageService _messageService;
 
     public ConversationCrudService(
         Func<ICommunicationRepository> repositoryFactory,
         IPlatformMemoryCache platformMemoryCache,
         IEventPublisher eventPublisher,
-        IMessageCrudService messageCrudService,
-        IMessageService messageService
+        IMessageCrudService messageCrudService
         ) : base(repositoryFactory, platformMemoryCache, eventPublisher)
     {
         _repositoryFactory = repositoryFactory;
         _messageCrudService = messageCrudService;
-        _messageService = messageService;
     }
 
     protected override Task<IList<ConversationEntity>> LoadEntities(IRepository repository, IList<string> ids, string responseGroup)
@@ -54,17 +51,6 @@ public class ConversationCrudService : CrudService<Conversation, ConversationEnt
                 foreach (var conversation in conversations)
                 {
                     conversation.LastMessage = lastMessages.FirstOrDefault(x => x.Id == conversation.LastMessageId);
-                }
-            }
-        }
-
-        if (respGroupEnum.HasFlag(ConversationResponseGroup.WithUnreadCount))
-        {
-            if (!conversations.IsNullOrEmpty())
-            {
-                foreach (var conversation in conversations)
-                {
-                    conversation.UnreadMessagesCount = await _messageService.GetUnreadMessagesCount(conversation.Users.FirstOrDefault()?.UserId, conversation.Id);
                 }
             }
         }
