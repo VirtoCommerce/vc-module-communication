@@ -127,6 +127,9 @@ public class MessageService : IMessageService
 
     public virtual async Task DeleteMessage(IList<string> messageIds, bool withReplies)
     {
+        var messages = await _messageCrudService.GetAsync(messageIds);
+        var conversationIds = messages.Select(x => x.ConversationId).Distinct().ToList();
+
         if (withReplies)
         {
             var idsToDelete = await GetChildMessageIdsRecursively(messageIds);
@@ -147,6 +150,19 @@ public class MessageService : IMessageService
 
             await _messageCrudService.DeleteAsync(messageIds);
         }
+
+        var conversations = await _conversationCrudService.GetAsync(conversationIds);
+        foreach (var conversation in conversations)
+        {
+            if (conversation != null && messageIds.Contains(conversation.LastMessageId))
+            {
+                var newLastMessage = (await GetMessagesByConversation(conversation.Id)).OrderByDescending(x => x.CreatedDate).FirstOrDefault();
+                conversation.LastMessageId = newLastMessage?.Id;
+                conversation.LastMessageTimestamp = newLastMessage?.CreatedDate ?? DateTime.MinValue;
+            }
+        }
+
+        await _conversationCrudService.SaveChangesAsync(conversations);
     }
 
     public virtual async Task<Message> SetMessageReadStatus(string messageId, string recipientId, bool notRead = false)
