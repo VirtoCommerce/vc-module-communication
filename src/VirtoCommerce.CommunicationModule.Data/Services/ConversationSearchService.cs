@@ -37,6 +37,11 @@ public class ConversationSearchService : SearchService<SearchConversationCriteri
     {
         var query = ((ICommunicationRepository)repository).Conversations;
 
+        if (!string.IsNullOrEmpty(criteria.Keyword))
+        {
+            query = query.Where(x => x.Name.Contains(criteria.Keyword));
+        }
+
         if (criteria.UserIds != null && criteria.UserIds.Any())
         {
             query = query.Include(x => x.Users);
