@@ -91,4 +91,26 @@ public class ConversationService : IConversationService
 
         return conversation;
     }
+
+    public virtual async Task<Conversation> GetOrCreateConversation(IList<string> userIds, string name, string iconUrl, string entityId, string entityType)
+    {
+        Conversation conversation = null;
+
+        if (!string.IsNullOrEmpty(entityId) && !string.IsNullOrEmpty(entityType))
+        {
+            conversation = await GetConversationByEntity(entityId, entityType);
+        }
+
+        if (conversation == null)
+        {
+            conversation = await GetConversationByUsers(userIds);
+        }
+
+        if (conversation == null)
+        {
+            conversation = await CreateConversation(userIds, name, iconUrl, entityId, entityType);
+        }
+
+        return conversation;
+    }
 }
