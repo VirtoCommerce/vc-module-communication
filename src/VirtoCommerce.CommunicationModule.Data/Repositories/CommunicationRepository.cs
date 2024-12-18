@@ -163,7 +163,7 @@ public class CommunicationRepository : DbContextRepositoryBase<CommunicationDbCo
 
         if (userIds != null && userIds.Any())
         {
-            result = await Conversations.Include(x => x.Users).FirstOrDefaultAsync(x => x.EntityId == null && x.Users.Select(u => u.Id).Intersect(userIds).Count() == userIds.Count);
+            result = await Conversations.Include(x => x.Users).FirstOrDefaultAsync(x => x.EntityId == null && x.Users.Select(u => u.UserId).Intersect(userIds).Count() == userIds.Count);
         }
 
         return result;
