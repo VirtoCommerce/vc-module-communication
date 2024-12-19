@@ -100,8 +100,7 @@ public class ConversationService : IConversationService
         {
             conversation = await GetConversationByEntity(entityId, entityType);
         }
-
-        if (conversation == null)
+        else
         {
             conversation = await GetConversationByUsers(userIds);
         }
