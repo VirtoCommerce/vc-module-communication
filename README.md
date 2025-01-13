@@ -1,46 +1,32 @@
-# CommunicationModule
+# Virto Commerce Communication Module
 
-## Overview
+[![CI status](https://github.com/VirtoCommerce/vc-module-communication/workflows/Module%20CI/badge.svg?branch=dev)](https://github.com/VirtoCommerce/vc-module-communication/actions?query=workflow%3A"Module+CI") 
 
-Short overview of what the new module is.
+Provides basic functionality for building communication systems between Virto users.
 
-- What is the new or updated experience?
+## Key Features
 
-- Does this module replace an existing module/experience? If yes, what is the transition plan?
+1. Extensibility
+1. Conversation context support - any system entity can become a subject of discussion
+1. Conversations with any number of participants
+1. Support for the "reply to message" function
+1. Ability to attach files to a message
+1. Support for message read statuses
+1. Ability to add a reaction to a message
+1. Renaming conversations, user avatars, and much more...
 
-- Does this module has dependency on other ? If yes, list/explain the dependencies.
+## Documentation
 
-- List the key deployment scenarios - why would people use this module?
+1. [Main Concept](/docs/01-main-concept.md)
+1. [Data structure](/docs/02-data-structure.md)
 
-## Functional Requirements
+## References
 
-Short description of the new module functional requirements.
-
-## Scenarios
-
-List of scenarios that the new module implements
-
-1. [Scenario 1](/doc/scenario-name1.md)
-1. [Scenario 2](/doc/scenario-name2.md)
-1. [Scenario 3](/doc/scenario-name3.md)
-    1. [Scenario 3.1](/doc/scenario-name31.md)
-    1. [Scenario 3.2](/doc/scenario-name32.md)
-1. [Scenario 4](/doc/scenario-name4.md)
-
-## Web API
-
-Web API documentation for each module is built out automatically and can be accessed by following the link bellow:
-<https://link-to-swager-api>
-
-## Database Model
-
-![DB model](./docs/media/diagram-db-model.png)
-
-## Related topics
-
-[Some Article1](some-article1.md)
-
-[Some Article2](some-article2.md)
+1. Deploy: https://virtocommerce.com/docs/latest/developer-guide/deploy-module-from-source-code/
+1. Installation: https://www.virtocommerce.com/docs/latest/user-guide/modules/
+1. Home: https://virtocommerce.com
+1. Community: https://www.virtocommerce.org
+1. [Download Latest Release](https://github.com/VirtoCommerce/vc-module-communication/releases/)
 
 ## License
 
@@ -50,7 +36,7 @@ Licensed under the Virto Commerce Open Software License (the "License"); you
 may not use this file except in compliance with the License. You may
 obtain a copy of the License at
 
-<https://virtocommerce.com/open-source-license>
+http://virtocommerce.com/opensourcelicense
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
