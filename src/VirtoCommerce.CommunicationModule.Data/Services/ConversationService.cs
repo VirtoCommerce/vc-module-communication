@@ -65,9 +65,7 @@ public class ConversationService : IConversationService
         var conversationName = name;
         if (string.IsNullOrEmpty(conversationName) && string.IsNullOrEmpty(entityId))
         {
-            var users = await _communicationUserCrudService.GetAsync(userIds);
-            var userNames = string.Join(", ", users.Select(x => x.UserName).ToArray());
-            conversationName = $"Chat {userNames}";
+            conversationName = await GenerateConversationName(userIds);
         }
 
         var conversation = AbstractTypeFactory<Conversation>.TryCreateInstance();
@@ -111,5 +109,12 @@ public class ConversationService : IConversationService
         }
 
         return conversation;
+    }
+
+    protected virtual async Task<string> GenerateConversationName(IList<string> userIds)
+    {
+        var users = await _communicationUserCrudService.GetAsync(userIds);
+        var userNames = string.Join(", ", users.Select(x => x.UserName).ToArray());
+        return $"Chat {userNames}";
     }
 }
