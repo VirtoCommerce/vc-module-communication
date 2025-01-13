@@ -1,6 +1,6 @@
 # Virto Commerce Communication Module
 
-[![CI status](https://github.com/VirtoCommerce/vc-module-communication/workflows/Module%20CI/badge.svg?branch=dev)](https://github.com/VirtoCommerce/vc-module-communication/actions?query=workflow%3A"Module+CI") 
+[![CI status](https://github.com/VirtoCommerce/vc-module-communication/workflows/module-ci.yml/badge.svg?branch=dev)](https://github.com/VirtoCommerce/vc-module-communication/actions/workflows/module-ci.yml) 
 
 Provides basic functionality for building communication systems between Virto users.
 
