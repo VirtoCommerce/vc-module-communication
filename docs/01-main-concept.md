@@ -12,7 +12,7 @@ In this diagram:
 
 - Black - the implemented message processing mechanism
 
-- Green - an example of implementing communication between the Operator and the Vendor. The Operator works from his workplace based on the VirtoCommerce Platform, the Vendor uses communications on the Vendor Portal. This scenario was implemented in ![VirtoCommerce Marketplace Communication module](https://github.com/VirtoCommerce/vc-module-marketplace-communication)
+- Green - an example of implementing communication between the Operator and the Vendor. The Operator works from his workplace based on the VirtoCommerce Platform, the Vendor uses communications on the Vendor Portal. This scenario was implemented in [VirtoCommerce Marketplace Communication module](https://github.com/VirtoCommerce/vc-module-marketplace-communication)
 
 - Orange - a potential scenario for adding messages for the Customer using the VirtoCommerce Frontend application
 
@@ -34,7 +34,7 @@ Messages can be collected in _Threads_ - if the sender wishes to indicate that h
 
 Conversations can be edited - you can give them names and icons.
 
-More about the relationships between module classes ![here](/docs/02-data-structure.md)
+More about the relationships between module classes [here](/docs/02-data-structure.md)
 
 
 ## Extensibility of message sending methods
@@ -43,7 +43,7 @@ The module architecture allows to expand the methods of sending messages to user
 
 ![VC Communication MessageSenders](media/03-communication-senders.png)
 
-The sending method implemented in VirtoCommerce Communication is also marked in black, and potential Senders are marked in orange. Creating a custom Sender is available in user modules. More details about this ![here](/docs/03-custom-senders.md)
+The sending method implemented in VirtoCommerce Communication is also marked in black, and potential Senders are marked in orange. Creating a custom Sender is available in user modules. More details about this [here](/docs/03-custom-senders.md)
 
 
 

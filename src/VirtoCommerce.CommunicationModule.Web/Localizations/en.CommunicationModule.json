@@ -1,11 +1,4 @@
 {
-  "CommunicationModule": {
-    "blades": {
-      "hello-world": {
-        "title": "Hello world blade"
-      }
-    }
-  },
   "permissions": {
     "CommunicationModule:access": "Open CommunicationModule menu",
     "CommunicationModule:create": "Create CommunicationModule related data",
@@ -15,13 +8,13 @@
   },
   "settings": {
     "CommunicationModule": {
-      "CommunicationModuleEnabled": {
-        "title": "CommunicationModule Enabled",
-        "description": "CommunicationModule Enabled setting"
+      "MessageSenders": {
+        "title": "Message Sender",
+        "description": "Will be used to deliver the message to the recipients"
       },
-      "CommunicationModulePassword": {
-        "title": "CommunicationModule Password",
-        "description": "CommunicationModule Password setting"
+      "UserTypes": {
+        "title": "CommunicationUser types",
+        "description": "Available types for CommunicationUsers"
       }
     }
   }
