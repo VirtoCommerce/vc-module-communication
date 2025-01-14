@@ -14,11 +14,13 @@ Provides basic functionality for building communication systems between Virto us
 1. Support for message read statuses
 1. Ability to add a reaction to a message
 1. Renaming conversations, user avatars, and much more...
+1. Custom message sending ways
 
 ## Documentation
 
-1. [Main Concept](/docs/01-main-concept.md)
+1. [Main concept](/docs/01-main-concept.md)
 1. [Data structure](/docs/02-data-structure.md)
+1. [How to create your own sending way](/docs/03-custom-senders.md)
 
 ## References
 
