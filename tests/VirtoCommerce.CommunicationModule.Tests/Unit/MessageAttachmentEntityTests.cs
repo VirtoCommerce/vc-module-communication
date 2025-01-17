@@ -52,6 +52,7 @@ public class MessageAttachmentEntityTests
         Assert.Equal(originalMessageAttachmentEntity.Id, convertedMessageAttachmentEntity.Id);
         Assert.Equal(originalMessageAttachmentEntity.MessageId, convertedMessageAttachmentEntity.MessageId);
         Assert.Equal(originalMessageAttachmentEntity.AttachmentUrl, convertedMessageAttachmentEntity.AttachmentUrl);
+        Assert.Equal(originalMessageAttachmentEntity.FileName, convertedMessageAttachmentEntity.FileName);
         Assert.Equal(originalMessageAttachmentEntity.FileType, convertedMessageAttachmentEntity.FileType);
         Assert.Equal(originalMessageAttachmentEntity.FileSize, convertedMessageAttachmentEntity.FileSize);
         Assert.Equal(originalMessageAttachmentEntity.CreatedDate, convertedMessageAttachmentEntity.CreatedDate);
@@ -86,6 +87,7 @@ public class MessageAttachmentEntityTests
         // Assertion
         Assert.Equal(actualMessageAttachmentEntity.MessageId, patchedMessageAttachmentEntity.MessageId);
         Assert.Equal(actualMessageAttachmentEntity.AttachmentUrl, patchedMessageAttachmentEntity.AttachmentUrl);
+        Assert.Equal(actualMessageAttachmentEntity.FileName, patchedMessageAttachmentEntity.FileName);
         Assert.Equal(actualMessageAttachmentEntity.FileType, patchedMessageAttachmentEntity.FileType);
         Assert.Equal(actualMessageAttachmentEntity.FileSize, patchedMessageAttachmentEntity.FileSize);
     }
@@ -99,6 +101,7 @@ public class MessageAttachmentEntityTests
                 Id = "TestMessageAttachmentId",
                 MessageId = "TestMessageId",
                 AttachmentUrl = "attachment-url.test",
+                FileName = "TestFileName",
                 FileType = "TestFileType",
                 FileSize = 42,
                 CreatedDate = new DateTime(2024, 10, 31),

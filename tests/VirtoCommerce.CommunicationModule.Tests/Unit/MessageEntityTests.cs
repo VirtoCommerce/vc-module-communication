@@ -124,6 +124,7 @@ public class MessageEntityTests
                             Id = "TestMessageAttachmentId",
                             MessageId = "TestMessageId",
                             AttachmentUrl = "attachment-url.test",
+                            FileName = "TestFileName",
                             FileType = "TestFileType",
                             FileSize = 42,
                             CreatedDate = new DateTime(2024, 11, 01),

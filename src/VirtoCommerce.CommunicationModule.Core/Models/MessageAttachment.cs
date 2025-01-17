@@ -5,6 +5,7 @@ public class MessageAttachment : AuditableEntity
 {
     public string MessageId { get; set; }
     public string AttachmentUrl { get; set; }
+    public string FileName { get; set; }
     public string FileType { get; set; }
     public int FileSize { get; set; }
 }

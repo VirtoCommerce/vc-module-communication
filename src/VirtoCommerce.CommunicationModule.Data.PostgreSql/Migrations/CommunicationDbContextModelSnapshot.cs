@@ -171,6 +171,10 @@ namespace VirtoCommerce.CommunicationModule.Data.PostgreSql.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("FileName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
                     b.Property<int>("FileSize")
                         .HasColumnType("integer");
 

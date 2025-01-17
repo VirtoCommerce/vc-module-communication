@@ -171,6 +171,10 @@ namespace VirtoCommerce.CommunicationModule.Data.SqlServer.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("FileName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
                     b.Property<int>("FileSize")
                         .HasColumnType("int");
 

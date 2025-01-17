@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtoCommerce.CommunicationModule.Data.Repositories;
 
@@ -11,9 +12,11 @@ using VirtoCommerce.CommunicationModule.Data.Repositories;
 namespace VirtoCommerce.CommunicationModule.Data.MySql.Migrations
 {
     [DbContext(typeof(CommunicationDbContext))]
-    partial class CommunicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250117094854_AddFileName")]
+    partial class AddFileName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
