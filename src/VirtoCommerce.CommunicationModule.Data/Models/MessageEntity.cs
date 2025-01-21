@@ -104,7 +104,7 @@ public class MessageEntity : AuditableEntity, IDataEntity<MessageEntity, Message
             model.Conversation = Conversation.ToModel(AbstractTypeFactory<Conversation>.TryCreateInstance());
         }
 
-        if (Attachments != null && Attachments.Any())
+        if (Attachments != null)
         {
             model.Attachments = Attachments.Select(x => x.ToModel(AbstractTypeFactory<MessageAttachment>.TryCreateInstance())).ToList();
         }
