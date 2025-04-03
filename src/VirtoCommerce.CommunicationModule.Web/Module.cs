@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -8,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.CommunicationModule.Core;
 using VirtoCommerce.CommunicationModule.Core.MessageSenders;
 using VirtoCommerce.CommunicationModule.Core.Services;
+using VirtoCommerce.CommunicationModule.Data;
 using VirtoCommerce.CommunicationModule.Data.Handlers;
 using VirtoCommerce.CommunicationModule.Data.MySql;
 using VirtoCommerce.CommunicationModule.Data.PostgreSql;
@@ -69,7 +69,7 @@ public class Module : IModule, IHasConfiguration
 
         serviceCollection.AddTransient<PushNotificationSender>();
 
-        serviceCollection.AddMediatR(typeof(Data.Anchor));
+        serviceCollection.AddMediatR(configuration => configuration.RegisterServicesFromAssemblyContaining<Anchor>());
     }
 
     public void PostInitialize(IApplicationBuilder appBuilder)

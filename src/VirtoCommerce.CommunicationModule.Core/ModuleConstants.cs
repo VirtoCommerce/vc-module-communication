@@ -49,7 +49,7 @@ public static class ModuleConstants
         {
             public static SettingDescriptor CommunicationUserTypes { get; } = new()
             {
-                Name = "CommunicationModule.UserTypes",
+                Name = "Communication.UserTypes",
                 GroupName = "Communication|General",
                 ValueType = SettingValueType.ShortText,
                 IsDictionary = true,
@@ -64,7 +64,7 @@ public static class ModuleConstants
 
             public static SettingDescriptor MessageSenders { get; } = new()
             {
-                Name = "CommunicationModule.MessageSenders",
+                Name = "Communication.MessageSenders",
                 GroupName = "Communication|General",
                 ValueType = SettingValueType.ShortText,
                 DefaultValue = nameof(PushNotificationSender)

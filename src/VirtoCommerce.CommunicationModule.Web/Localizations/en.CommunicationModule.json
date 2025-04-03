@@ -7,7 +7,7 @@
     "CommunicationModule:delete": "Delete CommunicationModule related data"
   },
   "settings": {
-    "CommunicationModule": {
+    "Communication": {
       "MessageSenders": {
         "title": "Message Sender",
         "description": "Will be used to deliver the message to the recipients"
