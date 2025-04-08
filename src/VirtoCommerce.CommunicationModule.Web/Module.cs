@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -8,6 +10,7 @@ using VirtoCommerce.CommunicationModule.Core;
 using VirtoCommerce.CommunicationModule.Core.MessageSenders;
 using VirtoCommerce.CommunicationModule.Core.Services;
 using VirtoCommerce.CommunicationModule.Data;
+using VirtoCommerce.CommunicationModule.Data.ExportImport;
 using VirtoCommerce.CommunicationModule.Data.Handlers;
 using VirtoCommerce.CommunicationModule.Data.MySql;
 using VirtoCommerce.CommunicationModule.Data.PostgreSql;
@@ -15,14 +18,18 @@ using VirtoCommerce.CommunicationModule.Data.Repositories;
 using VirtoCommerce.CommunicationModule.Data.Services;
 using VirtoCommerce.CommunicationModule.Data.SqlServer;
 using VirtoCommerce.CustomerModule.Core.Events;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.CommunicationModule.Web;
 
-public class Module : IModule, IHasConfiguration
+public class Module : IModule, IHasConfiguration, IExportSupport, IImportSupport
 {
+    private IApplicationBuilder _appBuilder;
+
     public ManifestModuleInfo ModuleInfo { get; set; }
     public IConfiguration Configuration { get; set; }
 
@@ -60,6 +67,7 @@ public class Module : IModule, IHasConfiguration
 
         serviceCollection.AddTransient<ICommunicationUserService, CommunicationUserService>();
         serviceCollection.AddTransient<ICommunicationUserCrudService, CommunicationUserCrudService>();
+        serviceCollection.AddTransient<ICommunicationUserSearchService, CommunicationUserSearchService>();
 
         serviceCollection.AddTransient<IConversationService, ConversationService>();
         serviceCollection.AddTransient<IConversationCrudService, ConversationCrudService>();
@@ -69,11 +77,15 @@ public class Module : IModule, IHasConfiguration
 
         serviceCollection.AddTransient<PushNotificationSender>();
 
+        serviceCollection.AddTransient<CommunicationExportImport>();
+
         serviceCollection.AddMediatR(configuration => configuration.RegisterServicesFromAssemblyContaining<Anchor>());
     }
 
     public void PostInitialize(IApplicationBuilder appBuilder)
     {
+        _appBuilder = appBuilder;
+
         var serviceProvider = appBuilder.ApplicationServices;
 
         // Register settings
@@ -104,4 +116,19 @@ public class Module : IModule, IHasConfiguration
     {
         // Nothing to do here
     }
+
+    public Task ExportAsync(Stream outStream, ExportImportOptions options, Action<ExportImportProgressInfo> progressCallback,
+        ICancellationToken cancellationToken)
+    {
+        return _appBuilder.ApplicationServices.GetRequiredService<CommunicationExportImport>().DoExportAsync(outStream, options,
+            progressCallback, cancellationToken);
+    }
+
+    public Task ImportAsync(Stream inputStream, ExportImportOptions options, Action<ExportImportProgressInfo> progressCallback,
+        ICancellationToken cancellationToken)
+    {
+        return _appBuilder.ApplicationServices.GetRequiredService<CommunicationExportImport>().DoImportAsync(inputStream, options,
+            progressCallback, cancellationToken);
+    }
+
 }

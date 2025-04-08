@@ -17,5 +17,10 @@
         "description": "Available types for CommunicationUsers"
       }
     }
+  },
+  "module": {
+    "VirtoCommerce.Communication": {
+      "description": "Export/Import of CommunicationUsers, Conversations and Messages"
+    }
   }
 }
