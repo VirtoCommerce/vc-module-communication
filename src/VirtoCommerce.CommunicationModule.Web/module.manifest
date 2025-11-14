@@ -6,7 +6,7 @@
 
   <platformVersion>3.897.0</platformVersion>
   <dependencies>
-    <!--<dependency id="VirtoCommerce.Core" version="3.800.0" />-->
+    <dependency id="VirtoCommerce.CustomerModule.Core" version="3.800.0" />
   </dependencies>
 
   <title>Communication core module</title>
