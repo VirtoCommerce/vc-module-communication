@@ -17,10 +17,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageReference Include="VirtoCommerce.Platform.Data.PostgreSql" Version="3.1002.0" />
-    <!-- Override transitive System.Security.Cryptography.Xml 9.0.0 to fix GHSA-37gx-xxp4-5rgx (high severity DoS) -->
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.6" />
+    <!-- Override transitive System.Security.Cryptography.Xml with a patched version (high severity DoS advisories, e.g. GHSA-37gx-xxp4-5rgx, GHSA-23rf-6693-g89p) -->
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.10" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VirtoCommerce.CommunicationModule.Data\VirtoCommerce.CommunicationModule.Data.csproj" />
