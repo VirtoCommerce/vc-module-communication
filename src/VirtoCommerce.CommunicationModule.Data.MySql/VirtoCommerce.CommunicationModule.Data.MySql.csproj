@@ -19,8 +19,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="VirtoCommerce.Platform.Data.MySql" Version="3.1002.0" />
-    <!-- Override transitive System.Security.Cryptography.Xml with a patched version (high severity DoS advisories, e.g. GHSA-37gx-xxp4-5rgx, GHSA-23rf-6693-g89p) -->
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.10" />
+    <!-- Override transitive System.Security.Cryptography.Xml with a patched version (high severity DoS advisories, e.g. GHSA-7hqp-7c5m-4vq6, GHSA-c399-9853-6jmj, GHSA-r955-8q5j-3h83) -->
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.13" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VirtoCommerce.CommunicationModule.Data\VirtoCommerce.CommunicationModule.Data.csproj" />

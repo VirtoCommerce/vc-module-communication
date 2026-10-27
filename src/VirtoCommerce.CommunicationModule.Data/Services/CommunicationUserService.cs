@@ -31,6 +31,11 @@ public class CommunicationUserService : ICommunicationUserService
 
     public virtual async Task<CommunicationUser> CreateCommunicationUser(string userId, string userType)
     {
+        if (string.IsNullOrEmpty(userId))
+        {
+            throw new ArgumentNullException(nameof(userId));
+        }
+
         var communicationUser = AbstractTypeFactory<CommunicationUser>.TryCreateInstance();
         communicationUser.UserId = userId;
         communicationUser.UserType = userType;
