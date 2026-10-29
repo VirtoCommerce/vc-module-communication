@@ -105,6 +105,9 @@ public class MessageService : IMessageService
             conversation.LastMessageId = message.Id;
             conversation.LastMessageTimestamp = DateTime.UtcNow;
             await _conversationCrudService.SaveChangesAsync([conversation]);
+
+            // Message.EntityId/EntityType read the conversation; senders put them into notifications
+            message.Conversation ??= conversation;
         }
 
         var messageSenders = await _settingsManager.GetValueAsync<string>(Settings.General.MessageSenders);
