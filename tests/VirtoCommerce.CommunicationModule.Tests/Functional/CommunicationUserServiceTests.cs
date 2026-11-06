@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -88,6 +89,22 @@ public class CommunicationUserServiceTests
         actualUser.Should().NotBeNull();
         actualUser.UserName.Should().Be(expectedUserName);
         actualUser.AvatarUrl.Should().Be(expectedUserAvatar);
+    }
+
+    // A user without an id must fail before the save: the database would reject it as a NOT NULL violation
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public async Task GetOrCreateCommunicationUserTest_EmptyUserId_Throws(string userId)
+    {
+        // Arrange
+        var communicationUserService = GetCommunicationUserService();
+
+        // Act
+        var action = () => communicationUserService.GetOrCreateCommunicationUser(userId, "Organization");
+
+        // Assertion
+        await action.Should().ThrowAsync<ArgumentNullException>();
     }
 
     private CommunicationUserService GetCommunicationUserService(
